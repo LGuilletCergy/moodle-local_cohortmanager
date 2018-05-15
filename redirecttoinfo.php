@@ -28,12 +28,20 @@
  * @copyright 2017 Laurent Guillet <laurent.guillet@u-cergy.fr>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
- * File : version.php
- * Version number
+ * File : redirecttoinfo.php
+ * Redirect to infocohort.php, used by javascript
  */
 
-defined('MOODLE_INTERNAL') || die;
+defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2018051500;
-$plugin->requires = 2015051100;
-$plugin->component = 'local_cohortmanager';
+$cohortid = required_param('cohortid', PARAM_INT);
+$courseid = required_param('courseid', PARAM_INT);
+
+global $DB;
+
+$contextid = context_course::instance($courseid);
+
+$infocohorturl = new moodle_url('/local/cohortmanager/infocohort.php',
+                array('cohortid' => $cohortid, 'origin' => 'course', 'contextid' => $contextid));
+
+redirect($infocohorturl);
