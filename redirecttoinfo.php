@@ -34,14 +34,13 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$cohortid = required_param('cohortid', PARAM_INT);
 $courseid = required_param('courseid', PARAM_INT);
 
 global $DB;
 
 $contextid = context_course::instance($courseid);
 
-$infocohorturl = new moodle_url('/local/cohortmanager/infocohort.php',
-                array('cohortid' => $cohortid, 'origin' => 'course', 'contextid' => $contextid));
+$viewinfourl = new moodle_url('/local/cohortmanager/viewinfo.php',
+                array('origin' => 'course', 'contextid' => $contextid));
 
-redirect($infocohorturl);
+redirect($viewinfourl);
