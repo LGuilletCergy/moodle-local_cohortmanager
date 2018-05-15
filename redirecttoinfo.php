@@ -32,13 +32,22 @@
  * Redirect to infocohort.php, used by javascript
  */
 
-defined('MOODLE_INTERNAL') || die();
+require_once("../../config.php");
 
 $courseid = required_param('courseid', PARAM_INT);
 
-global $DB;
+global $PAGE, $DB;
 
 $contextid = context_course::instance($courseid);
+
+$pageurl = new moodle_url('/local/cohortmanager/redirecttoinfo.php',
+                array('courseid' => $courseid));
+
+$PAGE->set_url($pageurl);
+
+$context = context::instance_by_id($contextid);
+
+$PAGE->set_context($context);
 
 $viewinfourl = new moodle_url('/local/cohortmanager/viewinfo.php',
                 array('origin' => 'course', 'contextid' => $contextid));
