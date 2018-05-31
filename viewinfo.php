@@ -178,7 +178,7 @@ if (($origin == 'course' && has_capability('local/cohortmanager:viewinfocourse',
 
                     $textlink = get_string('linkcohort', 'local_cohortmanager');
 
-                    $line[] = "<input type=button onClick=location.href='../cohortmanager/linkcohort.php?"
+                    $line[] = "<input type=button class='btn btn-secondary' onClick=location.href='../cohortmanager/linkcohort.php?"
                             . "cohortid=$cohort->id&contextid=$contextid'"
                             . " value=$textlink>";
                 }
