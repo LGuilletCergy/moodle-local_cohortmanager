@@ -118,7 +118,7 @@ if (($origin == 'course' && has_capability('local/cohortmanager:viewinfocourse',
             get_string('memberscount', 'local_cohortmanager'), get_string('linkcohort', 'local_cohortmanager'),
             get_string('moreinfo', 'local_cohortmanager'));
         $table->colclasses = array('leftalign category', 'leftalign name', 'leftalign id', 'leftalign description',
-            'leftalign size', 'leftalign button', 'leftalign moreinfo');
+            'leftalign size', 'leftalign linkbutton', 'leftalign moreinfo');
         $table->id = 'cohorts';
         $table->attributes['class'] = 'admintable generaltable';
     } else {
