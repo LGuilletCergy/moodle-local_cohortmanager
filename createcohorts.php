@@ -793,114 +793,117 @@ $services = $xpathvarservice->query("//Composante/Service");
 foreach ($services as $service) {
 
     $servicecode = $service->getAttribute('COD_SERVICE');
-    $cohortcode = $CFG->yearprefix."-8SC".$servicecode;
+    $cohortcode = $CFG->yearprefix."-8SC-8".$servicecode;
 
-    if (!$DB->record_exists('cohort', array('idnumber' => $cohortcode,
-        'contextid' => $contextidservicecentraux))) {
+    if (substr($servicecode, 0, 1) == '3') {
 
-        $cohort = new stdClass();
-        $cohort->contextid = $contextidservicecentraux;
-        $cohort->name = $service->getAttribute('LL_SERVICE');
-        $cohort->idnumber = $cohortcode;
-        $cohort->component = 'local_cohortmanager';
+        if (!$DB->record_exists('cohort', array('idnumber' => $cohortcode,
+            'contextid' => $contextidservicecentraux))) {
 
-        echo "La cohorte ".$cohort->name." n'existe pas\n";
+            $cohort = new stdClass();
+            $cohort->contextid = $contextidservicecentraux;
+            $cohort->name = $service->getAttribute('LL_SERVICE');
+            $cohort->idnumber = $cohortcode;
+            $cohort->component = 'local_cohortmanager';
 
-        $cohortid = cohort_add_cohort($cohort);
+            echo "La cohorte ".$cohort->name." n'existe pas\n";
 
-        echo "Elle est créée.\n";
-    } else {
+            $cohortid = cohort_add_cohort($cohort);
 
-        $cohortid = $DB->get_record('cohort', array('idnumber' => $cohortcode,
-            'contextid' => $contextidparentcategory))->id;
-    }
+            echo "Elle est créée.\n";
+        } else {
 
-    // Ici, rajouter l'entrée dans local_cohortmanager_info.
-
-    if ($DB->record_exists('local_cohortmanager_info',
-            array('cohortid' => $cohortid,
-                'codeelp' => $cohortcode))) {
-
-        // Update record.
-
-        $cohortinfo = $DB->get_record('local_cohortmanager_info',
-            array('cohortid' => $cohortid,
-                'codeelp' => $cohortcode));
-
-        $cohortinfo->timesynced = $timesync;
-
-        $DB->update_record('local_cohortmanager_info', $cohortinfo);
-
-    } else {
-
-        $cohortinfo = new stdClass();
-        $cohortinfo->cohortid = $cohortid;
-        $cohortinfo->teacherid = null;
-        $cohortinfo->codeelp = $cohortcode;
-        $cohortinfo->timesynced = $timesync;
-        $cohortinfo->typecohort = "service";
-
-        $DB->insert_record('local_cohortmanager_info', $cohortinfo);
-    }
-
-    $listcohortmembers = $DB->get_records('cohort_members', array('cohortid' => $cohortid));
-
-    $listtempcohortmembers = array();
-
-    foreach ($listcohortmembers as $cohortmembers) {
-
-        $tempcohortmember = new stdClass();
-        $tempcohortmember->userid = $cohortmembers->userid;
-        $tempcohortmember->stillexists = 0;
-
-        $listtempcohortmembers[] = $tempcohortmember;
-    }
-
-    foreach ($service->childNodes as $servicemember) {
-
-        if ($servicemember->nodeType !== 1 ) {
-            continue;
+            $cohortid = $DB->get_record('cohort', array('idnumber' => $cohortcode,
+                'contextid' => $contextidparentcategory))->id;
         }
 
-        $username = $servicemember->getAttribute('UID');
+        // Ici, rajouter l'entrée dans local_cohortmanager_info.
 
-        if ($DB->record_exists('user', array('username' => $username))) {
+        if ($DB->record_exists('local_cohortmanager_info',
+                array('cohortid' => $cohortid,
+                    'codeelp' => $cohortcode))) {
 
-            $memberid = $DB->get_record('user',
-                        array('username' => $username))->id;
+            // Update record.
 
-            if ($DB->record_exists('cohort_members',
-                        array('cohortid' => $cohortid, 'userid' => $memberid))) {
+            $cohortinfo = $DB->get_record('local_cohortmanager_info',
+                array('cohortid' => $cohortid,
+                    'codeelp' => $cohortcode));
 
-                foreach ($listtempcohortmembers as $tempcohortmember) {
+            $cohortinfo->timesynced = $timesync;
 
-                    if ($tempcohortmember->userid == $memberid) {
+            $DB->update_record('local_cohortmanager_info', $cohortinfo);
 
-                        $tempcohortmember->stillexists = 1;
+        } else {
+
+            $cohortinfo = new stdClass();
+            $cohortinfo->cohortid = $cohortid;
+            $cohortinfo->teacherid = null;
+            $cohortinfo->codeelp = $cohortcode;
+            $cohortinfo->timesynced = $timesync;
+            $cohortinfo->typecohort = "service";
+
+            $DB->insert_record('local_cohortmanager_info', $cohortinfo);
+        }
+
+        $listcohortmembers = $DB->get_records('cohort_members', array('cohortid' => $cohortid));
+
+        $listtempcohortmembers = array();
+
+        foreach ($listcohortmembers as $cohortmembers) {
+
+            $tempcohortmember = new stdClass();
+            $tempcohortmember->userid = $cohortmembers->userid;
+            $tempcohortmember->stillexists = 0;
+
+            $listtempcohortmembers[] = $tempcohortmember;
+        }
+
+        foreach ($service->childNodes as $servicemember) {
+
+            if ($servicemember->nodeType !== 1 ) {
+                continue;
+            }
+
+            $username = $servicemember->getAttribute('UID');
+
+            if ($DB->record_exists('user', array('username' => $username))) {
+
+                $memberid = $DB->get_record('user',
+                            array('username' => $username))->id;
+
+                if ($DB->record_exists('cohort_members',
+                            array('cohortid' => $cohortid, 'userid' => $memberid))) {
+
+                    foreach ($listtempcohortmembers as $tempcohortmember) {
+
+                        if ($tempcohortmember->userid == $memberid) {
+
+                            $tempcohortmember->stillexists = 1;
+                        }
                     }
+                } else {
+
+                    echo "Inscription de l'utilisateur ".$username."\n";
+
+                    cohort_add_member($cohortid, $memberid);
+
+                    echo "Utilisateur inscrit\n";
                 }
-            } else {
-
-                echo "Inscription de l'utilisateur ".$username."\n";
-
-                cohort_add_member($cohortid, $memberid);
-
-                echo "Utilisateur inscrit\n";
             }
         }
-    }
 
-    if (isset($listtempcohortmembers)) {
+        if (isset($listtempcohortmembers)) {
 
-        foreach ($listtempcohortmembers as $tempcohortmember) {
+            foreach ($listtempcohortmembers as $tempcohortmember) {
 
-            if ($tempcohortmember->stillexists == 0) {
+                if ($tempcohortmember->stillexists == 0) {
 
-                echo "Désinscription de l'utilisateur $tempcohortmember->userid\n";
+                    echo "Désinscription de l'utilisateur $tempcohortmember->userid\n";
 
-                cohort_remove_member($cohortid, $tempcohortmember->userid);
+                    cohort_remove_member($cohortid, $tempcohortmember->userid);
 
-                echo "Utilisateur désinscrit\n";
+                    echo "Utilisateur désinscrit\n";
+                }
             }
         }
     }
