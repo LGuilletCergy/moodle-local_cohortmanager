@@ -21,8 +21,7 @@
  * 95011 Cergy-Pontoise cedex
  * FRANCE
  *
- * Adds to the course a section where the teacher can submit a problem to groups of students
- * and give them various collaboration tools to work together on a solution.
+ * Create cohorts and add ways to manage them for teachers.
  *
  * @package   local_cohortmanager
  * @copyright 2017 Laurent Guillet <laurent.guillet@u-cergy.fr>
@@ -56,6 +55,12 @@ if (has_capability('enrol/cohort:config', $context)) {
     if ($cohort->visible || is_siteadmin()) {
 
         $course = $DB->get_record('course', array('id' => $context->instanceid));
+
+        $datagroup = new stdClass();
+        $datagroup->name = $cohort->name;
+        $datagroup->idnumber = $cohort->idnumber;
+
+        $groupid = groups_create_group($datagroup);
 
         $studentroleid = $DB->get_record('role', array('shortname' => 'student'))->id;
 
