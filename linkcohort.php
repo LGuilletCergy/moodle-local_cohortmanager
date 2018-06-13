@@ -59,6 +59,7 @@ if (has_capability('enrol/cohort:config', $context)) {
         $datagroup = new stdClass();
         $datagroup->name = $cohort->name;
         $datagroup->idnumber = $cohort->idnumber;
+        $data->courseid = $course->id;
 
         $groupid = groups_create_group($datagroup);
 
