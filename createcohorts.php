@@ -784,7 +784,7 @@ if ($fileopeningservice == false) {
 $idnumberservicecentraux = $CFG->yearprefix."-8SC";
 $categoryservicecentrauxid = $DB->get_record('course_categories',
         array('idnumber' => $idnumberservicecentraux))->id;
-$contextidservicecentraux = context_coursecat::instance($categoryservicecentraux)->id;
+$contextidservicecentraux = context_coursecat::instance($categoryservicecentrauxid)->id;
 
 $xpathvarservice = new Domxpath($xmldocservice);
 
