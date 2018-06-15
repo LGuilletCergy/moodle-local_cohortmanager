@@ -171,7 +171,8 @@ if ($fileopeningetuens == false) {
 
                             if ($tempcohortmember->stillexists == 0) {
 
-                                echo "Désinscription de l'utilisateur $tempcohortmember->userid\n";
+                                echo "Désinscription de l'utilisateur $tempcohortmember->userid"
+                                        . " de la cohorte $cohortid\n";
 
                                 cohort_remove_member($cohortid, $tempcohortmember->userid);
 
@@ -620,7 +621,8 @@ if ($fileopeningvet == false) {
 
             if ($tempexistence->stillexists == 0) {
 
-                echo "Désinscription de l'utilisateur $tempexistence->userid\n";
+                echo "Désinscription de l'utilisateur $tempcohortmember->userid "
+                        . "de la cohorte $cohortid\n";
 
                 cohort_remove_member($tempexistence->cohortid, $tempexistence->userid);
 
@@ -745,7 +747,8 @@ if ($fileopeningall == false) {
 
             if ($tempcohortmember->stillexists == 0) {
 
-                echo "Désinscription de l'utilisateur $tempcohortmember->userid\n";
+                echo "Désinscription de l'utilisateur $tempcohortmember->userid"
+                        . " de la cohorte $cohortid\n";
 
                 cohort_remove_member($cohortid, $tempcohortmember->userid);
 
@@ -905,7 +908,8 @@ if ($fileopeningservice == false) {
 
                     if ($tempcohortmember->stillexists == 0) {
 
-                        echo "Désinscription de l'utilisateur $tempcohortmember->userid\n";
+                        echo "Désinscription de l'utilisateur $tempcohortmember->userid "
+                                . "de la cohorte $cohortid\n";
 
                         cohort_remove_member($cohortid, $tempcohortmember->userid);
 
@@ -1045,7 +1049,8 @@ if ($fileopeningfakevac == false) {
 
                             if ($tempcohortmember->stillexists == 0) {
 
-                                echo "Désinscription de l'utilisateur $tempcohortmember->userid\n";
+                                echo "Désinscription de l'utilisateur $tempcohortmember->userid "
+                                        . "de la cohorte $cohortid\n";
 
                                 cohort_remove_member($cohortid, $tempcohortmember->userid);
 
