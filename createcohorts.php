@@ -414,6 +414,9 @@ foreach ($listcohortsvetsdb as $cohortvetdb) {
     $listexistence[] = $tempexistence;
 }
 
+print_object($listexistence);
+exit;
+
 $xmldocvet = new DOMDocument();
 $fileopeningvet = $xmldocvet->load('/home/referentiel/DOKEOS_Etudiants_Inscriptions.xml');
 if ($fileopeningvet == false) {
