@@ -409,13 +409,10 @@ foreach ($listcohortsvetsdb as $cohortvetdb) {
         $tempexistence->cohortid = $cohortvetdb->cohortid;
         $tempexistence->userid = $memberdb->id;
         $tempexistence->stillexists = 0;
+
+        $listexistence[] = $tempexistence;
     }
-
-    $listexistence[] = $tempexistence;
 }
-
-print_object($listexistence);
-exit;
 
 $xmldocvet = new DOMDocument();
 $fileopeningvet = $xmldocvet->load('/home/referentiel/DOKEOS_Etudiants_Inscriptions.xml');
@@ -783,9 +780,9 @@ foreach ($listcohortsservicesdb as $cohortservicedb) {
         $tempexistence->cohortid = $cohortservicedb->cohortid;
         $tempexistence->userid = $memberdb->id;
         $tempexistence->stillexists = 0;
-    }
 
-    $listexistenceservice[] = $tempexistence;
+        $listexistenceservice[] = $tempexistence;
+    }
 }
 
 $xmldocservice = new DOMDocument();
