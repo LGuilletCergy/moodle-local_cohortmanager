@@ -407,7 +407,7 @@ foreach ($listcohortsvetsdb as $cohortvetdb) {
 
         $tempexistence = new stdClass();
         $tempexistence->cohortid = $cohortvetdb->cohortid;
-        $tempexistence->userid = $memberdb->id;
+        $tempexistence->userid = $memberdb->userid;
         $tempexistence->stillexists = 0;
 
         $listexistence[] = $tempexistence;
@@ -660,8 +660,7 @@ if (!$DB->record_exists('cohort', array('idnumber' => 1,
     }
 }
 
-$listcohortmembers = $DB->get_records('cohort_members',
-                            array('cohortid' => $cohortid));
+$listcohortmembers = $DB->get_records('cohort_members', array('cohortid' => $cohortid));
 
 $listtempcohortmembers = array();
 
@@ -772,7 +771,8 @@ $listexistenceservice = array();
 
 foreach ($listcohortsservicesdb as $cohortservicedb) {
 
-    $listmembersdb = $DB->get_records('cohort_members', array('cohortid' => $cohortservicedb->cohortid));
+    $listmembersdb = $DB->get_records('cohort_members',
+            array('cohortid' => $cohortservicedb->cohortid));
 
     foreach ($listmembersdb as $memberdb) {
 
