@@ -821,7 +821,7 @@ if ($fileopeningservice == false) {
             } else {
 
                 $cohortid = $DB->get_record('cohort', array('idnumber' => $cohortcode,
-                    'contextid' => $contextidparentcategory))->id;
+                    'contextid' => $contextidservicecentraux))->id;
             }
 
             // Ici, rajouter l'entrée dans local_cohortmanager_info.
