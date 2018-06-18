@@ -39,6 +39,8 @@ $origin = required_param('origin', PARAM_TEXT);
 
 global $PAGE, $DB;
 
+require_login();
+
 $cohort = $DB->get_record('cohort', array('id' => $cohortid));
 
 $pageurl = new moodle_url('/local/cohortmanager/infocohort.php',
@@ -111,6 +113,8 @@ if (has_capability('local/cohortmanager:viewinfocategory', $contextcohort)) {
     echo "<br>".get_string('coursewithcohort', 'local_cohortmanager', $cohort->name)."<br><br>";
 
     $listenrols = $DB->get_records('enrol', array('enrol' => 'cohort', 'customint1' => $cohortid));
+
+    $datacourse = array();
 
     foreach ($listenrols as $enrol) {
 
