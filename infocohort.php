@@ -40,6 +40,9 @@ $origin = required_param('origin', PARAM_TEXT);
 global $PAGE, $DB;
 
 require_login();
+$context = context::instance_by_id($contextid);
+
+$PAGE->set_context($context);
 
 $cohort = $DB->get_record('cohort', array('id' => $cohortid));
 
@@ -50,10 +53,6 @@ $PAGE->set_title($title);
 $PAGE->set_url($pageurl);
 $PAGE->set_pagelayout('standard');
 $PAGE->set_heading($title);
-
-$context = context::instance_by_id($contextid);
-
-$PAGE->set_context($context);
 
 $PAGE->navbar->add(get_string('viewinfo', 'local_cohortmanager'),
         new moodle_url('/local/cohortmanager/viewinfo.php',
