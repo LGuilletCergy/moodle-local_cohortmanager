@@ -1152,10 +1152,6 @@ if ($fileopeningcomposanteprof == false) {
         $cohortcomposantecode = $CFG->yearprefix."-P".$composantecode;
         $categorycode = $CFG->yearprefix."-".$composantecode;
 
-        $teacher = $diplomeprof->parentNode;
-        $teacheruid = $teacher->getAttribute('StaffUID');
-        $user = $DB->get_record('user', array('username' => $teacheruid));
-
         if ($DB->record_exists('course_categories', array('idnumber' => $categorycode))) {
 
             $composantecategory = $DB->get_record('course_categories',
@@ -1214,22 +1210,30 @@ if ($fileopeningcomposanteprof == false) {
                 $DB->insert_record('local_cohortmanager_info', $cohortcomposanteinfo);
             }
 
-            if (!$DB->record_exists('cohort_members',
-                    array('cohortid' => $cohortcomposanteid, 'userid' => $user->id))) {
+            $teacher = $diplomeprof->parentNode;
+            $username = $teacher->getAttribute('StaffUID');
 
-                echo "Inscription de l'utilisateur ".$username."\n";
+            if ($DB->record_exists('user', array('username' => $username))) {
 
-                cohort_add_member($cohortcomposanteid, $user->id);
+                $user = $DB->get_record('user', array('username' => $username));
 
-                echo "Utilisateur inscrit\n";
-            } else {
+                if (!$DB->record_exists('cohort_members',
+                        array('cohortid' => $cohortcomposanteid, 'userid' => $user->id))) {
 
-                foreach ($listexistence as $tempexistence) {
+                    echo "Inscription de l'utilisateur ".$username."\n";
 
-                    if ($tempexistence->userid == $user->id &&
-                            $tempexistence->cohortid == $cohortid) {
+                    cohort_add_member($cohortcomposanteid, $user->id);
 
-                        $tempexistence->stillexists = 1;
+                    echo "Utilisateur inscrit\n";
+                } else {
+
+                    foreach ($listexistence as $tempexistence) {
+
+                        if ($tempexistence->userid == $user->id &&
+                                $tempexistence->cohortid == $cohortid) {
+
+                            $tempexistence->stillexists = 1;
+                        }
                     }
                 }
             }
