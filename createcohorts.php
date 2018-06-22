@@ -1152,6 +1152,10 @@ if ($fileopeningcomposanteprof == false) {
         $cohortcomposantecode = $CFG->yearprefix."-P".$composantecode;
         $categorycode = $CFG->yearprefix."-".$composantecode;
 
+        $teacher = $diplomeprof->parentNode;
+        $teacheruid = $teacher->getAttribute('StaffUID');
+        $user = $DB->get_record('user', array('username' => $teacheruid));
+
         if ($DB->record_exists('course_categories', array('idnumber' => $categorycode))) {
 
             $composantecategory = $DB->get_record('course_categories',
