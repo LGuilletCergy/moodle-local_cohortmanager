@@ -531,7 +531,7 @@ if ($fileopeningvet == false) {
 
                     $composantecode = substr($inscription->getAttribute('CodeEtape'), 0, 1);
 
-                    $cohortcomposantecode = $CFG->yearprefix."-E".$composantecode;
+                    $cohortcomposantecode = $CFG->yearprefix."-S".$composantecode;
 
                     if ($DB->record_exists('course_categories', array('idnumber' => $cohortcomposantecode))) {
 
@@ -1150,7 +1150,7 @@ if ($fileopeningcomposanteprof == false) {
     foreach ($diplomesprofs as $diplomeprof) {
 
         $composantecode = substr($diplomeprof->getAttribute('CodeEtape'), 0, 1);
-        $cohortcomposantecode = $CFG->yearprefix."-P".$composantecode;
+        $cohortcomposantecode = $CFG->yearprefix."-T".$composantecode;
         $categorycode = $CFG->yearprefix."-".$composantecode;
 
         if ($DB->record_exists('course_categories', array('idnumber' => $categorycode))) {
