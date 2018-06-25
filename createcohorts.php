@@ -547,7 +547,8 @@ if ($fileopeningvet == false) {
 
                             $cohortcomposante = new stdClass();
                             $cohortcomposante->contextid = $contextidcomposantecategory;
-                            $cohortcomposante->name = $composantecategory->name;
+                            $cohortcomposante->name = 'Etudiants de'
+                                    . ' '.substr($composantecategory->name, 4);
                             $cohortcomposante->idnumber = $cohortcomposantecode;
                             $cohortcomposante->component = 'local_cohortmanager';
 
@@ -1166,7 +1167,7 @@ if ($fileopeningcomposanteprof == false) {
 
                 $cohortcomposante = new stdClass();
                 $cohortcomposante->contextid = $contextidcomposantecategory;
-                $cohortcomposante->name = 'Enseignants de '.$composantecategory->name;
+                $cohortcomposante->name = 'Enseignants de '.substr($composantecategory->name, 4);
                 $cohortcomposante->idnumber = $cohortcomposantecode;
                 $cohortcomposante->component = 'local_cohortmanager';
 
