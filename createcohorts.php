@@ -531,7 +531,7 @@ if ($fileopeningvet == false) {
 
                     $composantecode = substr($inscription->getAttribute('CodeEtape'), 0, 1);
 
-                    $cohortcomposantecode = $CFG->yearprefix."-".$composantecode;
+                    $cohortcomposantecode = $CFG->yearprefix."-S".$composantecode;
 
                     if ($DB->record_exists('course_categories', array('idnumber' => $cohortcomposantecode))) {
 
@@ -1150,7 +1150,7 @@ if ($fileopeningcomposanteprof == false) {
     foreach ($diplomesprofs as $diplomeprof) {
 
         $composantecode = substr($diplomeprof->getAttribute('CodeEtape'), 0, 1);
-        $cohortcomposantecode = $CFG->yearprefix."-P".$composantecode;
+        $cohortcomposantecode = $CFG->yearprefix."-T".$composantecode;
         $categorycode = $CFG->yearprefix."-".$composantecode;
 
         if ($DB->record_exists('course_categories', array('idnumber' => $categorycode))) {
@@ -1249,6 +1249,66 @@ if ($fileopeningcomposanteprof == false) {
 
                 echo "Désinscription de l'utilisateur $tempexistence->userid "
                         . "de la cohorte $cohortid Cas 6\n";
+
+                cohort_remove_member($tempexistence->cohortid, $tempexistence->userid);
+
+                echo "Utilisateur désinscrit\n";
+            }
+        }
+    }
+}
+
+
+
+
+
+
+// Cohortes de niveaux.
+
+$sqllistcohortsniveaux = "SELECT distinct cohortid FROM {local_cohortmanager_info} WHERE "
+        . "typecohort LIKE 'niveau')";
+
+$listcohortsniveauxdb = $DB->get_records_sql($sqllistcohortsniveaux);
+
+$listexistenceniveaux = array();
+
+foreach ($listcohortsniveauxdb as $cohortniveaudb) {
+
+    $listmembersdb = $DB->get_records('cohort_members',
+            array('cohortid' => $cohortniveaudb->cohortid));
+
+    foreach ($listmembersdb as $memberdb) {
+
+        $tempexistence = new stdClass();
+        $tempexistence->cohortid = $cohortvetdb->cohortid;
+        $tempexistence->userid = $memberdb->userid;
+        $tempexistence->stillexists = 0;
+
+        $listexistenceniveaux[] = $tempexistence;
+    }
+}
+
+$xmldocniveau = new DOMDocument();
+$fileopeningniveau = $xmldocniveau->load('/home/referentiel/DOKEOS_Etudiants_Inscriptions.xml');
+if ($fileopeningniveau == false) {
+    echo "Impossible de lire le fichier source.\n";
+} else {
+
+    $xpathvarniveau = new Domxpath($xmldocniveau);
+
+    $inscription = $xpathvarniveau->query("//Student/"
+            . "Annee_universitaire[@AnneeUniv=$CFG->thisyear]/Inscriptions");
+
+    // Ajouter le code ici.
+
+    if (isset($listexistence)) {
+
+        foreach ($listexistence as $tempexistence) {
+
+            if ($tempexistence->stillexists == 0) {
+
+                echo "Désinscription de l'utilisateur $tempexistence->userid "
+                        . "de la cohorte $cohortid Cas 7\n";
 
                 cohort_remove_member($tempexistence->cohortid, $tempexistence->userid);
 
