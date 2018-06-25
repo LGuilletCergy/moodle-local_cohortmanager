@@ -1166,7 +1166,7 @@ if ($fileopeningcomposanteprof == false) {
 
                 $cohortcomposante = new stdClass();
                 $cohortcomposante->contextid = $contextidcomposantecategory;
-                $cohortcomposante->name = $composantecategory->name;
+                $cohortcomposante->name = 'Enseignants de '.$composantecategory->name;
                 $cohortcomposante->idnumber = $cohortcomposantecode;
                 $cohortcomposante->component = 'local_cohortmanager';
 
