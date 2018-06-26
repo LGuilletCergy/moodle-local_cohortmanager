@@ -463,7 +463,7 @@ if ($fileopeningvet == false) {
                             'contextid' => $contextidparentincategory))) {
 
                             $cohort = new stdClass();
-                            $cohort->contextid = $contextidparentcategory;
+                            $cohort->contextid = $contextidparentincategory;
                             $cohort->name = $inscription->getAttribute('LibEtape');
                             $cohort->idnumber = $cohortcode;
                             $cohort->component = 'local_cohortmanager';
@@ -476,7 +476,7 @@ if ($fileopeningvet == false) {
                         } else {
 
                             $cohortid = $DB->get_record('cohort', array('idnumber' => $cohortcode,
-                                'contextid' => $contextidparentcategory))->id;
+                                'contextid' => $contextidparentincategory))->id;
                         }
 
                         // Ici, rajouter l'entrée dans local_cohortmanager_info.
