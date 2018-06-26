@@ -1260,11 +1260,6 @@ if ($fileopeningcomposanteprof == false) {
     }
 }
 
-
-
-
-
-
 // Cohortes de niveaux.
 
 $sqllistcohortsniveaux = "SELECT distinct cohortid FROM {local_cohortmanager_info} WHERE "

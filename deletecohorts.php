@@ -41,7 +41,7 @@ require_once($CFG->libdir .'/filelib.php');
 global $DB;
 
 $listcohortscomposanteprofinfo = $DB->get_records('local_cohortmanager_info',
-        array('typecohort' => 'composanteprof'));
+        array('typecohort' => 'vet'));
 
 foreach ($listcohortscomposanteprofinfo as $cohortcomposanteprofinfo) {
 
@@ -49,4 +49,37 @@ foreach ($listcohortscomposanteprofinfo as $cohortcomposanteprofinfo) {
     cohort_delete_cohort($cohort);
 }
 
-$DB->delete_records('local_cohortmanager_info', array('typecohort' => 'composanteprof'));
+$DB->delete_records('local_cohortmanager_info', array('typecohort' => 'vet'));
+
+$listcohortscomposanteprofinfo = $DB->get_records('local_cohortmanager_info',
+        array('typecohort' => 'composante'));
+
+foreach ($listcohortscomposanteprofinfo as $cohortcomposanteprofinfo) {
+
+    $cohort = $DB->get_record('cohort', array('id' => $cohortcomposanteprofinfo->cohortid));
+    cohort_delete_cohort($cohort);
+}
+
+$DB->delete_records('local_cohortmanager_info', array('typecohort' => 'composante'));
+
+$listcohortscomposanteprofinfo = $DB->get_records('local_cohortmanager_info',
+        array('typecohort' => 'allstudents'));
+
+foreach ($listcohortscomposanteprofinfo as $cohortcomposanteprofinfo) {
+
+    $cohort = $DB->get_record('cohort', array('id' => $cohortcomposanteprofinfo->cohortid));
+    cohort_delete_cohort($cohort);
+}
+
+$DB->delete_records('local_cohortmanager_info', array('typecohort' => 'allstudents'));
+
+$listcohortscomposanteprofinfo = $DB->get_records('local_cohortmanager_info',
+        array('typecohort' => 'niveau'));
+
+foreach ($listcohortscomposanteprofinfo as $cohortcomposanteprofinfo) {
+
+    $cohort = $DB->get_record('cohort', array('id' => $cohortcomposanteprofinfo->cohortid));
+    cohort_delete_cohort($cohort);
+}
+
+$DB->delete_records('local_cohortmanager_info', array('typecohort' => 'niveau'));
