@@ -533,11 +533,13 @@ if ($fileopeningvet == false) {
                     $composantecode = substr($inscription->getAttribute('CodeEtape'), 0, 1);
 
                     $cohortcomposantecode = $CFG->yearprefix."-S".$composantecode;
+                    $categorycode = $CFG->yearprefix."-".$composantecode;
 
-                    if ($DB->record_exists('course_categories', array('idnumber' => $cohortcomposantecode))) {
+                    if ($DB->record_exists('course_categories',
+                            array('idnumber' => $categorycode))) {
 
                         $composantecategory = $DB->get_record('course_categories',
-                                array('idnumber' => $cohortcomposantecode));
+                                array('idnumber' => $categorycode));
 
                         $contextidcomposantecategory = $DB->get_record('context',
                                 array('instanceid' => $composantecategory->id,
@@ -1300,7 +1302,7 @@ if ($fileopeningniveau == false) {
 
     foreach ($listinscriptions as $inscription) {
 
-        $vetcode = $inscription->getAttribute('CodeEtape');
+        $vetcode = $CFG->yearprefix."-".$inscription->getAttribute('CodeEtape');
 
         if ($DB->record_exists('course_categories', array('idnumber' => $vetcode))) {
 
