@@ -38,6 +38,8 @@ require_once($CFG->dirroot .'/cohort/lib.php');
 require_once($CFG->dirroot .'/course/lib.php');
 require_once($CFG->libdir .'/filelib.php');
 
+$timesync = time();
+
 // Cohortes de groupes remplies.
 
 $xmldocetuens = new DOMDocument();
@@ -51,8 +53,6 @@ if ($fileopeningetuens == false) {
     $listtreatedgroups = array();
 
     $groupsetuens = $xpathvaretuens->query('//Structure_diplome/Cours/Group');
-
-    $timesync = time();
 
     foreach ($groupsetuens as $group) {
 
