@@ -464,7 +464,7 @@ if ($fileopeningvet == false) {
 
                             $cohort = new stdClass();
                             $cohort->contextid = $contextidparentincategory;
-                            $cohort->name = $inscription->getAttribute('LibEtape');
+                            $cohort->name = substr($inscription->getAttribute('LibEtape'), 9);
                             $cohort->idnumber = $cohortcode;
                             $cohort->component = 'local_cohortmanager';
 
