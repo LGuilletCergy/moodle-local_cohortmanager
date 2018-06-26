@@ -1321,11 +1321,11 @@ if ($fileopeningniveau == false) {
                         'contextlevel' => CONTEXT_COURSECAT))->id;
 
             if (!$DB->record_exists('cohort', array('idnumber' => $cohortcode,
-                'contextid' => $contextidlevelcategory))) {
+                'contextid' => $contextidniveaucategory))) {
 
                 $cohortniveau = new stdClass();
                 $cohortniveau->contextid = $contextidniveaucategory;
-                $cohortniveau->name = 'Tous les étudiants de '.$ufrcategory->name.' '
+                $cohortniveau->name = 'Tous les étudiants de '.substr($ufrcategory->name, 4).' '
                         . ''.$niveaucategory->name;
                 $cohortniveau->idnumber = $cohortcode;
                 $cohortniveau->component = 'local_cohortmanager';
