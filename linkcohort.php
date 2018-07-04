@@ -73,7 +73,6 @@ if (has_capability('enrol/cohort:config', $context)) {
         enrol_cohort_sync($trace, $course->id);
         $trace->finished();
     }
-
 }
 
 redirect($redirecturl);
