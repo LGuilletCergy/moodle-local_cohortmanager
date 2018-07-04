@@ -42,7 +42,7 @@ global $DB;
 
 $sql = "SELECT * FROM {cohort} WHERE id NOT IN "
         . "(SELECT distinct cohortid FROM {local_cohortmanager_info) "
-        . "AND component LIKE 'local_cohortmanager'";
+        . "AND component LIKE local_cohortmanager";
 
 $listcohorts = $DB->get_records_sql($sql);
 
