@@ -40,46 +40,15 @@ require_once($CFG->libdir .'/filelib.php');
 
 global $DB;
 
-$listcohortscomposanteprofinfo = $DB->get_records('local_cohortmanager_info',
-        array('typecohort' => 'vet'));
+$sql = "SELECT * FROM {cohort} WHERE id NOT IN "
+        . "(SELECT distinct cohortid FROM {local_cohortmanager_info)";
 
-foreach ($listcohortscomposanteprofinfo as $cohortcomposanteprofinfo) {
+$listcohorts = $DB->get_records_sql($sql);
 
-    $cohort = $DB->get_record('cohort', array('id' => $cohortcomposanteprofinfo->cohortid));
-    cohort_delete_cohort($cohort);
+foreach ($listcohorts as $cohort) {
+
+    if (!$DB->record_exists('enrol', array('enrol' => 'cohort', 'customint1' => $cohort->id))) {
+
+        cohort_delete_cohort($cohort);
+    }
 }
-
-$DB->delete_records('local_cohortmanager_info', array('typecohort' => 'vet'));
-
-$listcohortscomposanteprofinfo = $DB->get_records('local_cohortmanager_info',
-        array('typecohort' => 'composante'));
-
-foreach ($listcohortscomposanteprofinfo as $cohortcomposanteprofinfo) {
-
-    $cohort = $DB->get_record('cohort', array('id' => $cohortcomposanteprofinfo->cohortid));
-    cohort_delete_cohort($cohort);
-}
-
-$DB->delete_records('local_cohortmanager_info', array('typecohort' => 'composante'));
-
-$listcohortscomposanteprofinfo = $DB->get_records('local_cohortmanager_info',
-        array('typecohort' => 'allstudents'));
-
-foreach ($listcohortscomposanteprofinfo as $cohortcomposanteprofinfo) {
-
-    $cohort = $DB->get_record('cohort', array('id' => $cohortcomposanteprofinfo->cohortid));
-    cohort_delete_cohort($cohort);
-}
-
-$DB->delete_records('local_cohortmanager_info', array('typecohort' => 'allstudents'));
-
-$listcohortscomposanteprofinfo = $DB->get_records('local_cohortmanager_info',
-        array('typecohort' => 'niveau'));
-
-foreach ($listcohortscomposanteprofinfo as $cohortcomposanteprofinfo) {
-
-    $cohort = $DB->get_record('cohort', array('id' => $cohortcomposanteprofinfo->cohortid));
-    cohort_delete_cohort($cohort);
-}
-
-$DB->delete_records('local_cohortmanager_info', array('typecohort' => 'niveau'));
