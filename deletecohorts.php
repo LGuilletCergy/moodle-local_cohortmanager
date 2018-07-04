@@ -41,7 +41,7 @@ require_once($CFG->libdir .'/filelib.php');
 global $DB;
 
 $sql = "SELECT * FROM {cohort} WHERE id NOT IN "
-        . "(SELECT distinct cohortid FROM {local_cohortmanager_info)";
+        . "(SELECT distinct cohortid FROM {local_cohortmanager_info})";
 
 $listcohorts = $DB->get_records_sql($sql);
 
