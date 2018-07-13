@@ -48,3 +48,5 @@ $string['lastname'] = 'Nom';
 $string['course'] = 'Cours';
 $string['linkcohort'] = 'Lier à ce cours';
 $string['linkedcohort'] = 'Cohorte déjà liée';
+$string['privacy:metadata'] = 'Le manager de cohortes ne stocke aucune données personnelle en dehors '
+        . 'des systèmes standards de Moodle.';
