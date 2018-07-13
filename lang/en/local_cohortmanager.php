@@ -48,3 +48,5 @@ $string['lastname'] = 'Lastname';
 $string['course'] = 'Course';
 $string['linkcohort'] = 'Link to this course';
 $string['linkedcohort'] = 'Already linked';
+$string['privacy:metadata'] = 'The cohort manager does not record personal data'
+        . ' outside standard Moodle systems.';
