@@ -107,9 +107,12 @@ class syncothercohorts extends \core\task\scheduled_task {
 
             $listdeletestudents = $DB->execute($sql);
 
-            foreach ($listdeletestudents as $student) {
+            if (isset($listdeletestudents)) {
 
-                cohort_remove_member($copycohortinfo->cohortid, $student->userid);
+                foreach ($listdeletestudents as $student) {
+
+                    cohort_remove_member($copycohortinfo->cohortid, $student->userid);
+                }
             }
         }
     }
