@@ -56,7 +56,7 @@ class syncothercohorts extends \core\task\scheduled_task {
 
             $vetidnumber = $CFG->yearprefix.'-'.$vet;
             $originalcohort = $DB->get_record('cohort', array('idnumber' => $vetidnumber));
-            $typecode = 'copy-'.$originalcohort->id;
+            $typecode = 'copie-'.$originalcohort->id;
 
             if ($DB->record_exists('local_cohortmanager_info', array('typecohort' => $typecode))) {
 
@@ -84,7 +84,7 @@ class syncothercohorts extends \core\task\scheduled_task {
                 $copycohortinfo->teacherid = null;
                 $copycohortinfo->codeelp = 0;
                 $copycohortinfo->timesynced = time();
-                $copycohortinfo->typecohort = 'copy-'.$originalcohort->id;
+                $copycohortinfo->typecohort = 'copie-'.$originalcohort->id;
 
                 $DB->insert_record('local_cohortmanager_info', $copycohortinfo);
             }
