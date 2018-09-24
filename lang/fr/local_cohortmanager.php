@@ -38,9 +38,11 @@ $string['moreinfo'] = 'Plus d\'infos';
 $string['infocohort'] = 'Information sur la cohorte {$a}';
 $string['cohortusers'] = 'Membres de la cohorte {$a}';
 $string['coursewithcohort'] = 'Liste des cours utilisant la cohorte {$a}';
+$string['cohortmanager:viewinfocourse'] = 'Voir les informations sur les cohortes du cours';
 $string['cohortmanager:viewinfocategory'] = 'Voir les informations sur les cohortes de la catégorie';
 $string['name'] = 'Nom';
 $string['idnumber'] = 'Identifiant cohorte';
+$string['studentidnumber'] = 'Numéro étudiant';
 $string['description'] = 'Description';
 $string['memberscount'] = 'Effectif de la cohorte';
 $string['firstname'] = 'Prénom';
@@ -50,3 +52,4 @@ $string['linkcohort'] = 'Lier à ce cours';
 $string['linkedcohort'] = 'Cohorte déjà liée';
 $string['privacy:metadata'] = 'Le manager de cohortes ne stocke aucune données personnelle en dehors '
         . 'des systèmes standards de Moodle.';
+$string['syncothercohorts'] = 'Synchronise les cohortes de la composante 8';

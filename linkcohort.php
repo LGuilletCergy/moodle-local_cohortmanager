@@ -60,8 +60,16 @@ if (has_capability('enrol/cohort:config', $context)) {
         $datagroup->name = $cohort->name;
         $datagroup->idnumber = $cohort->idnumber;
         $datagroup->courseid = $course->id;
-
-        $groupid = groups_create_group($datagroup);
+		
+		if (!$DB->record_exists('groups', array('courseid' => $course->id, 'idnumber' => $cohort->idnumber))) {
+			
+			$groupid = groups_create_group($datagroup);
+		} else {
+			
+			$groupid = $DB->get_record('groups', array('courseid' => $course->id, 'idnumber' => $cohort->idnumber))->id;
+			$datagroup->id = $groupid;
+			groups_update_group($datagroup);
+		}
 
         $studentroleid = $DB->get_record('role', array('shortname' => 'student'))->id;
 

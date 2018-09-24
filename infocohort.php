@@ -76,14 +76,15 @@ echo $OUTPUT->header();
 
 $contextcohort = context::instance_by_id($cohort->contextid);
 
-if (has_capability('local/cohortmanager:viewinfocategory', $contextcohort)) {
+if ((has_capability('local/cohortmanager:viewinfocategory', $contextcohort) && $origin == 'course_cat') || 
+	(has_capability('local/cohortmanager:viewinfocourse', $contextcohort) && $origin == 'course')) {
 
     echo get_string('cohortusers', 'local_cohortmanager', $cohort->name)."<br><br>";
 
     $table = new html_table();
     $table->head  = array(get_string('firstname', 'local_cohortmanager'),
-        get_string('lastname', 'local_cohortmanager'));
-    $table->colclasses = array('leftalign firstname', 'leftalign lastname');
+        get_string('lastname', 'local_cohortmanager'), get_string('studentidnumber', 'local_cohortmanager'));
+    $table->colclasses = array('leftalign firstname', 'leftalign lastname', 'leftalign idnumber');
     $table->id = 'cohortmembers';
     $table->attributes['class'] = 'admintable generaltable';
 
@@ -96,6 +97,7 @@ if (has_capability('local/cohortmanager:viewinfocategory', $contextcohort)) {
         $line = array();
         $line[] = $user->firstname;
         $line[] = $user->lastname;
+		$line[] = $user->idnumber;
         $data[] = $row = new html_table_row($line);
     }
 

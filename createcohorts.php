@@ -72,91 +72,149 @@ if ($fileopeningetuens == false) {
 
             if ($courselp != "" && $groupcode != "") {
 
-                $category = $DB->get_record('course_categories', array('idnumber' => $idvetyear));
-                $parentcategory = $DB->get_record('course_categories', array('id' => $category->parent));
-                $contextidparentcategory = $DB->get_record('context',
-                                array('contextlevel' => 40, 'instanceid' => $parentcategory->id))->id;
+                if ($DB->record_exists('course_categories', array('idnumber' => $idvetyear))) {
 
-                $tableteachername = array();
+                    $category = $DB->get_record('course_categories', array('idnumber' => $idvetyear));
 
-                if ($DB->record_exists('cohort', array('idnumber' => $cohortcode,
-                    'contextid' => $contextidparentcategory))) {
+                    $parentcategory = $DB->get_record('course_categories', array('id' => $category->parent));
+                    $contextidparentcategory = $DB->get_record('context',
+                                                    array('contextlevel' => 40,
+                                                        'instanceid' => $parentcategory->id))->id;
 
-                    $cohort = $DB->get_record('cohort', array('idnumber' => $cohortcode,
-                        'contextid' => $contextidparentcategory));
+                    $tableteachername = array();
 
-                    $cohortid = $cohort->id;
+                    if ($DB->record_exists('cohort', array('idnumber' => $cohortcode,
+                        'contextid' => $contextidparentcategory))) {
 
-                    if ($cohort->name != $groupname." ($idvet-$groupcode)") {
+                        $cohort = $DB->get_record('cohort', array('idnumber' => $cohortcode,
+                                'contextid' => $contextidparentcategory));
 
-                        if (!$DB->record_exists('local_cohortmanager_names',
-                                array('cohortid' => $cohortid, 'codeelp' => $courselp))) {
+                        $cohortid = $cohort->id;
 
-                            $cohortnameentry = new stdClass();
-                            $cohortnameentry->cohortid = $cohortid;
-                            $cohortnameentry->codeelp = $cohortcode;
-                            $cohortnameentry->cohortname = $groupname;
+                        if ($cohort->name != $groupname." ($idvet-$groupcode)") {
 
-                            $DB->insert_record('local_cohortmanager_names', $cohortnameentry);
+                            if (!$DB->record_exists('local_cohortmanager_names',
+                                    array('cohortid' => $cohortid, 'codeelp' => $cohortcode))) {
 
-                        } else if (!$DB->record_exists('local_cohortmanager_names',
-                                array('cohortid' => $cohortid, 'codeelp' => $cohortcode,
-                                    'cohortname' => $groupname))) {
+                                $cohortnameentry = new stdClass();
+                                $cohortnameentry->cohortid = $cohortid;
+                                $cohortnameentry->codeelp = $cohortcode;
+                                $cohortnameentry->cohortname = $groupname;
 
-                            $cohortnameentry = $DB->get_record('local_cohortmanager_names',
-                                array('cohortid' => $cohortid, 'codeelp' => $cohortcode));
+                                $DB->insert_record('local_cohortmanager_names', $cohortnameentry);
 
-                            $cohortnameentry->cohortname = $groupname;
+                            } else if (!$DB->record_exists('local_cohortmanager_names',
+                                    array('cohortid' => $cohortid, 'codeelp' => $cohortcode,
+                                        'cohortname' => $groupname))) {
 
-                            $DB->update_record('local_cohortmanager_names', $cohortnameentry);
-                        }
-                    }
+                                $cohortnameentry = $DB->get_record('local_cohortmanager_names',
+                                        array('cohortid' => $cohortid, 'codeelp' => $cohortcode));
 
-                    echo "La cohorte ".$cohort->name." existe\n";
+                                $cohortnameentry->cohortname = $groupname;
 
-                    $listcohortmembers = $DB->get_records('cohort_members',
-                                array('cohortid' => $cohortid));
-
-                    $listtempcohortmembers = array();
-
-                    foreach ($listcohortmembers as $cohortmembers) {
-
-                        $tempcohortmember = new stdClass();
-                        $tempcohortmember->userid = $cohortmembers->userid;
-                        $tempcohortmember->stillexists = 0;
-
-                        $listtempcohortmembers[] = $tempcohortmember;
-                    }
-
-                    $group->removeChild($group->lastChild);
-
-                    foreach ($group->childNodes as $groupmember) {
-
-                        if ($groupmember->nodeType !== 1 ) {
-                            continue;
+                                $DB->update_record('local_cohortmanager_names', $cohortnameentry);
+                            }
                         }
 
-                        $username = $groupmember->getAttribute('StudentUID');
-                        $tableteachername[] = $groupmember->getAttribute('StaffUID');
+                        echo "La cohorte ".$cohort->name." existe\n";
 
-                        if ($DB->record_exists('user', array('username' => $username))) {
+                        $listcohortmembers = $DB->get_records('cohort_members', array('cohortid' => $cohortid));
 
-                            $memberid = $DB->get_record('user',
+                        $listtempcohortmembers = array();
+
+                        foreach ($listcohortmembers as $cohortmembers) {
+
+                            $tempcohortmember = new stdClass();
+                            $tempcohortmember->userid = $cohortmembers->userid;
+                            $tempcohortmember->stillexists = 0;
+
+                            $listtempcohortmembers[] = $tempcohortmember;
+                        }
+
+                        $group->removeChild($group->lastChild);
+
+                        foreach ($group->childNodes as $groupmember) {
+
+                            if ($groupmember->nodeType !== 1 ) {
+                                    continue;
+                            }
+
+                            $username = $groupmember->getAttribute('StudentUID');
+                            $tableteachername[] = $groupmember->getAttribute('StaffUID');
+
+                            if ($DB->record_exists('user', array('username' => $username))) {
+
+                                $memberid = $DB->get_record('user',
                                         array('username' => $username))->id;
 
-                            if ($DB->record_exists('cohort_members',
+                                if ($DB->record_exists('cohort_members',
                                         array('cohortid' => $cohortid, 'userid' => $memberid))) {
 
-                                foreach ($listtempcohortmembers as $tempcohortmember) {
+                                    foreach ($listtempcohortmembers as $tempcohortmember) {
 
-                                    if ($tempcohortmember->userid == $memberid) {
+                                        if ($tempcohortmember->userid == $memberid) {
 
-                                        $tempcohortmember->stillexists = 1;
+                                            $tempcohortmember->stillexists = 1;
+                                        }
                                     }
+                                } else {
+
+                                    echo "Inscription de l'utilisateur ".$username."\n";
+
+                                    cohort_add_member($cohortid, $memberid);
+
+                                    echo "Utilisateur inscrit\n";
                                 }
-                            } else {
+                            }
+                        }
+
+                        if (isset($listtempcohortmembers)) {
+
+                            foreach ($listtempcohortmembers as $tempcohortmember) {
+
+                                if ($tempcohortmember->stillexists == 0) {
+
+                                    echo "Désinscription de l'utilisateur $tempcohortmember->userid"
+                                                    . " de la cohorte $cohortid Cas 1\n";
+
+                                    cohort_remove_member($cohortid, $tempcohortmember->userid);
+
+                                    echo "Utilisateur désinscrit\n";
+                                }
+                            }
+                        }
+                    } else {
+
+                        $cohort = new stdClass();
+                        $cohort->contextid = $contextidparentcategory;
+                        $cohort->name = $group->getAttribute('GroupName')." ($idvet-$groupcode)";
+                        $cohort->idnumber = $cohortcode;
+                        $cohort->component = 'local_cohortmanager';
+
+                        echo "La cohorte ".$cohort->name." n'existe pas\n";
+
+                        $cohortid = cohort_add_cohort($cohort);
+
+                        echo "Elle est créée.\n";
+
+                        $group->removeChild($group->lastChild);
+                        $groupmembers = $group->childNodes;
+
+                        foreach ($groupmembers as $groupmember) {
+
+                            if ($groupmember->nodeType !== 1 ) {
+                                    continue;
+                            }
+
+                            $username = $groupmember->getAttribute('StudentUID');
+                            $tableteachername[] = $groupmember->getAttribute('StaffUID');
+
+                            if ($DB->record_exists('user', array('username' => $username))) {
 
                                 echo "Inscription de l'utilisateur ".$username."\n";
+
+                                $memberid = $DB->get_record('user',
+                                                array('username' => $username))->id;
 
                                 cohort_add_member($cohortid, $memberid);
 
@@ -165,63 +223,8 @@ if ($fileopeningetuens == false) {
                         }
                     }
 
-                    if (isset($listtempcohortmembers)) {
-
-                        foreach ($listtempcohortmembers as $tempcohortmember) {
-
-                            if ($tempcohortmember->stillexists == 0) {
-
-                                echo "Désinscription de l'utilisateur $tempcohortmember->userid"
-                                        . " de la cohorte $cohortid Cas 1\n";
-
-                                cohort_remove_member($cohortid, $tempcohortmember->userid);
-
-                                echo "Utilisateur désinscrit\n";
-                            }
-                        }
-                    }
-                } else {
-
-                    $cohort = new stdClass();
-                    $cohort->contextid = $contextidparentcategory;
-                    $cohort->name = $group->getAttribute('GroupName')." ($idvet-$groupcode)";
-                    $cohort->idnumber = $cohortcode;
-                    $cohort->component = 'local_cohortmanager';
-
-                    echo "La cohorte ".$cohort->name." n'existe pas\n";
-
-                    $cohortid = cohort_add_cohort($cohort);
-
-                    echo "Elle est créée.\n";
-
-                    $group->removeChild($group->lastChild);
-                    $groupmembers = $group->childNodes;
-
-                    foreach ($groupmembers as $groupmember) {
-
-                        if ($groupmember->nodeType !== 1 ) {
-                            continue;
-                        }
-
-                        $username = $groupmember->getAttribute('StudentUID');
-                        $tableteachername[] = $groupmember->getAttribute('StaffUID');
-
-                        if ($DB->record_exists('user',
-                                array('username' => $username))) {
-
-                            echo "Inscription de l'utilisateur ".$username."\n";
-
-                            $memberid = $DB->get_record('user',
-                                    array('username' => $username))->id;
-
-                            cohort_add_member($cohortid, $memberid);
-
-                            echo "Utilisateur inscrit\n";
-                        }
-                    }
+                    $listtreatedgroups[] = $cohortcode;
                 }
-
-                $listtreatedgroups[] = $cohortcode;
             }
         }
 
@@ -294,65 +297,72 @@ if ($fileopeningens == false) {
 
             if (!in_array($cohortcode, $listtreatedgroups)) {
 
-                $category = $DB->get_record('course_categories', array('idnumber' => $idvetyear));
-                $parentcategory = $DB->get_record('course_categories', array('id' => $category->parent));
-                $contextidparentcategory = $DB->get_record('context',
-                                array('contextlevel' => CONTEXT_COURSECAT,
-                                    'instanceid' => $parentcategory->id))->id;
+				if ($DB->record_exists('course_categories', array('idnumber' => $idvetyear))) {
 
-                if (!$DB->record_exists('cohort', array('idnumber' => $cohortcode,
-                    'contextid' => $contextidparentcategory))) {
+					$category = $DB->get_record('course_categories', array('idnumber' => $idvetyear));
 
-                    $cohort = new stdClass();
-                    $cohort->contextid = $contextidparentcategory;
-                    $cohort->name = $group->getAttribute('GroupName')." ($idvet-$groupcode)";
-                    $cohort->idnumber = $cohortcode;
-                    $cohort->component = 'local_cohortmanager';
+					$parentcategory = $DB->get_record('course_categories', array('id' => $category->parent));
+					$contextidparentcategory = $DB->get_record('context',
+									array('contextlevel' => CONTEXT_COURSECAT,
+										'instanceid' => $parentcategory->id))->id;
 
-                    echo "La cohorte ".$cohort->name." n'existe pas\n";
+					if (!$DB->record_exists('cohort', array('idnumber' => $cohortcode,
+						'contextid' => $contextidparentcategory))) {
 
-                    $cohortid = cohort_add_cohort($cohort);
+						$cohort = new stdClass();
+						$cohort->contextid = $contextidparentcategory;
+						$cohort->name = $group->getAttribute('GroupName')." ($idvet-$groupcode)";
+						$cohort->idnumber = $cohortcode;
+						$cohort->component = 'local_cohortmanager';
 
-                    echo "Elle est créée.\n";
-                }
+						echo "La cohorte ".$cohort->name." n'existe pas\n";
+
+						$cohortid = cohort_add_cohort($cohort);
+
+						echo "Elle est créée.\n";
+					}
+				}
 
                 $listtreatedgroups[] = $cohortcode;
             } else {
 
-                $category = $DB->get_record('course_categories', array('idnumber' => $idvetyear));
-                $parentcategory = $DB->get_record('course_categories', array('id' => $category->parent));
-                $contextidparentcategory = $DB->get_record('context',
-                                array('contextlevel' => 40, 'instanceid' => $parentcategory->id))->id;
+				if ($DB->record_exists('course_categories', array('idnumber' => $idvetyear))) {
 
-                $cohort = $DB->get_record('cohort', array('idnumber' => $cohortcode,
-                    'contextid' => $contextidparentcategory));
+					$category = $DB->get_record('course_categories', array('idnumber' => $idvetyear));
+					$parentcategory = $DB->get_record('course_categories', array('id' => $category->parent));
+					$contextidparentcategory = $DB->get_record('context',
+									array('contextlevel' => 40, 'instanceid' => $parentcategory->id))->id;
 
-                $cohortid = $cohort->id;
+					$cohort = $DB->get_record('cohort', array('idnumber' => $cohortcode,
+						'contextid' => $contextidparentcategory));
 
-                if ($cohort->name != $groupname." ($idvet-$groupcode)") {
+					$cohortid = $cohort->id;
 
-                    if (!$DB->record_exists('local_cohortmanager_names',
-                            array('cohortid' => $cohortid, 'codeelp' => $courselp))) {
+					if ($cohort->name != $groupname." ($idvet-$groupcode)") {
 
-                        $cohortnameentry = new stdClass();
-                        $cohortnameentry->cohortid = $cohortid;
-                        $cohortnameentry->codeelp = $cohortcode;
-                        $cohortnameentry->cohortname = $groupname;
+						if (!$DB->record_exists('local_cohortmanager_names',
+								array('cohortid' => $cohortid, 'codeelp' => $cohortcode))) {
 
-                        $DB->insert_record('local_cohortmanager_names', $cohortnameentry);
+							$cohortnameentry = new stdClass();
+							$cohortnameentry->cohortid = $cohortid;
+							$cohortnameentry->codeelp = $cohortcode;
+							$cohortnameentry->cohortname = $groupname;
 
-                    } else if (!$DB->record_exists('local_cohortmanager_names',
-                            array('cohortid' => $cohortid, 'codeelp' => $cohortcode,
-                                'cohortname' => $groupname))) {
+							$DB->insert_record('local_cohortmanager_names', $cohortnameentry);
 
-                        $cohortnameentry = $DB->get_record('local_cohortmanager_names',
-                            array('cohortid' => $cohortid, 'codeelp' => $cohortcode));
+						} else if (!$DB->record_exists('local_cohortmanager_names',
+								array('cohortid' => $cohortid, 'codeelp' => $cohortcode,
+									'cohortname' => $groupname))) {
 
-                        $cohortnameentry->cohortname = $groupname;
+							$cohortnameentry = $DB->get_record('local_cohortmanager_names',
+								array('cohortid' => $cohortid, 'codeelp' => $cohortcode));
 
-                        $DB->update_record('local_cohortmanager_names', $cohortnameentry);
-                    }
-                }
+							$cohortnameentry->cohortname = $groupname;
+
+							$DB->update_record('local_cohortmanager_names', $cohortnameentry);
+						}
+					}
+				}
 
                 echo "Cohorte $cohortcode déjà traitée\n";
             }
@@ -765,6 +775,260 @@ if ($fileopeningall == false) {
     $DB->delete_records_select('local_cohortmanager_info', $selectdeleteoldcohortinfo);
 }
 
+// Cohorte Tous enseignants.
+
+if (!$DB->record_exists('cohort', array('idnumber' => 2,
+                'contextid' => context_system::instance()->id))) {
+
+    $cohort = new stdClass();
+    $cohort->contextid = context_system::instance()->id;
+    $cohort->name = "Enseignants";
+    $cohort->idnumber = 2;
+    $cohort->component = 'local_cohortmanager';
+    $cohort->visible = 0;
+
+    $cohortid = cohort_add_cohort($cohort);
+} else {
+
+    $cohort = $DB->get_record('cohort', array('idnumber' => 2,
+                'contextid' => context_system::instance()->id));
+
+    $cohortid = $cohort->id;
+
+    if ($cohort->name != "Enseignants") {
+
+        $cohort->name = "Enseignants";
+
+        $cohort = $DB->update_record('cohort', $cohort);
+    }
+}
+
+$listcohortmembers = $DB->get_records('cohort_members', array('cohortid' => $cohortid));
+
+$listtempcohortmembers = array();
+
+foreach ($listcohortmembers as $cohortmembers) {
+
+    $tempcohortmember = new stdClass();
+    $tempcohortmember->userid = $cohortmembers->userid;
+    $tempcohortmember->stillexists = 0;
+
+    $listtempcohortmembers[] = $tempcohortmember;
+}
+
+$xmldocall = new DOMDocument();
+$fileopeningall = $xmldocall->load('/home/referentiel/DOKEOS_Enseignants_Affectations.xml');
+if ($fileopeningall == false) {
+    echo "Impossible de lire le fichier source.\n";
+} else {
+
+    $xpathvarall = new Domxpath($xmldocall);
+
+    $teachers = $xpathvarall->query("//Teacher");
+
+    foreach ($teachers as $teacher) {
+
+        $username = $teacher->getAttribute('StaffUID');
+
+        if ($DB->record_exists('user', array('username' => $username))) {
+
+            $memberid = $DB->get_record('user',
+                        array('username' => $username))->id;
+
+            if ($DB->record_exists('cohort_members',
+                        array('cohortid' => $cohortid, 'userid' => $memberid))) {
+
+                foreach ($listtempcohortmembers as $tempcohortmember) {
+
+                    if ($tempcohortmember->userid == $memberid) {
+
+                        $tempcohortmember->stillexists = 1;
+                    }
+                }
+            } else {
+
+                echo "Inscription de l'utilisateur ".$username."\n";
+
+                cohort_add_member($cohortid, $memberid);
+
+                echo "Utilisateur inscrit\n";
+            }
+        }
+    }
+
+    if ($DB->record_exists('local_cohortmanager_info',
+            array('cohortid' => $cohortid, 'teacherid' => null,
+                'codeelp' => 2))) {
+
+        // Update record.
+
+        $cohortinfo = $DB->get_record('local_cohortmanager_info',
+            array('cohortid' => $cohortid, 'teacherid' => null,
+                'codeelp' => 2));
+
+        $cohortinfo->timesynced = $timesync;
+
+        $DB->update_record('local_cohortmanager_info', $cohortinfo);
+
+    } else {
+
+        $cohortinfo = new stdClass();
+        $cohortinfo->cohortid = $cohortid;
+        $cohortinfo->teacherid = null;
+        $cohortinfo->codeelp = 2;
+        $cohortinfo->timesynced = $timesync;
+        $cohortinfo->typecohort = "allteachers";
+
+        $DB->insert_record('local_cohortmanager_info', $cohortinfo);
+    }
+
+    if (isset($listtempcohortmembers)) {
+
+        foreach ($listtempcohortmembers as $tempcohortmember) {
+
+            if ($tempcohortmember->stillexists == 0) {
+
+                echo "Désinscription de l'utilisateur $tempcohortmember->userid"
+                        . " de la cohorte $cohortid Cas 3\n";
+
+                cohort_remove_member($cohortid, $tempcohortmember->userid);
+
+                echo "Utilisateur désinscrit\n";
+            }
+        }
+    }
+
+    $selectdeleteoldcohortinfo = "timesynced < $timesync";
+    $DB->delete_records_select('local_cohortmanager_info', $selectdeleteoldcohortinfo);
+}
+
+// Cohorte Tous personnels.
+
+if (!$DB->record_exists('cohort', array('idnumber' => 3,
+                'contextid' => context_system::instance()->id))) {
+
+    $cohort = new stdClass();
+    $cohort->contextid = context_system::instance()->id;
+    $cohort->name = "Personnels";
+    $cohort->idnumber = 3;
+    $cohort->component = 'local_cohortmanager';
+    $cohort->visible = 0;
+
+    $cohortid = cohort_add_cohort($cohort);
+} else {
+
+    $cohort = $DB->get_record('cohort', array('idnumber' => 3,
+                'contextid' => context_system::instance()->id));
+
+    $cohortid = $cohort->id;
+
+    if ($cohort->name != "Personnels") {
+
+        $cohort->name = "Personnels";
+
+        $cohort = $DB->update_record('cohort', $cohort);
+    }
+}
+
+$listcohortmembers = $DB->get_records('cohort_members', array('cohortid' => $cohortid));
+
+$listtempcohortmembers = array();
+
+foreach ($listcohortmembers as $cohortmembers) {
+
+    $tempcohortmember = new stdClass();
+    $tempcohortmember->userid = $cohortmembers->userid;
+    $tempcohortmember->stillexists = 0;
+
+    $listtempcohortmembers[] = $tempcohortmember;
+}
+
+$xmldocall = new DOMDocument();
+$fileopeningall = $xmldocall->load('/home/referentiel/sefiap_personnel_composante.xml');
+if ($fileopeningall == false) {
+    echo "Impossible de lire le fichier source.\n";
+} else {
+
+    $xpathvarall = new Domxpath($xmldocall);
+
+    $staffs = $xpathvarall->query("//Composante/Service/Individu");
+
+    foreach ($staffs as $staff) {
+
+        $username = $staff->getAttribute('UID');
+
+        if ($DB->record_exists('user', array('username' => $username))) {
+
+            $memberid = $DB->get_record('user',
+                        array('username' => $username))->id;
+
+            if ($DB->record_exists('cohort_members',
+                        array('cohortid' => $cohortid, 'userid' => $memberid))) {
+
+                foreach ($listtempcohortmembers as $tempcohortmember) {
+
+                    if ($tempcohortmember->userid == $memberid) {
+
+                        $tempcohortmember->stillexists = 1;
+                    }
+                }
+            } else {
+
+                echo "Inscription de l'utilisateur ".$username."\n";
+
+                cohort_add_member($cohortid, $memberid);
+
+                echo "Utilisateur inscrit\n";
+            }
+        }
+    }
+
+    if ($DB->record_exists('local_cohortmanager_info',
+            array('cohortid' => $cohortid, 'teacherid' => null,
+                'codeelp' => 3))) {
+
+        // Update record.
+
+        $cohortinfo = $DB->get_record('local_cohortmanager_info',
+            array('cohortid' => $cohortid, 'teacherid' => null,
+                'codeelp' => 3));
+
+        $cohortinfo->timesynced = $timesync;
+
+        $DB->update_record('local_cohortmanager_info', $cohortinfo);
+
+    } else {
+
+        $cohortinfo = new stdClass();
+        $cohortinfo->cohortid = $cohortid;
+        $cohortinfo->teacherid = null;
+        $cohortinfo->codeelp = 3;
+        $cohortinfo->timesynced = $timesync;
+        $cohortinfo->typecohort = "allstaffs";
+
+        $DB->insert_record('local_cohortmanager_info', $cohortinfo);
+    }
+
+    if (isset($listtempcohortmembers)) {
+
+        foreach ($listtempcohortmembers as $tempcohortmember) {
+
+            if ($tempcohortmember->stillexists == 0) {
+
+                echo "Désinscription de l'utilisateur $tempcohortmember->userid"
+                        . " de la cohorte $cohortid Cas 3\n";
+
+                cohort_remove_member($cohortid, $tempcohortmember->userid);
+
+                echo "Utilisateur désinscrit\n";
+            }
+        }
+    }
+
+    $selectdeleteoldcohortinfo = "timesynced < $timesync";
+    $DB->delete_records_select('local_cohortmanager_info', $selectdeleteoldcohortinfo);
+}
+
 // Cohortes de services.
 
 $sqllistcohortsservices = "SELECT distinct cohortid FROM {local_cohortmanager_info} WHERE "
@@ -958,152 +1222,155 @@ if ($fileopeningfakevac == false) {
 
             if ($courselp != "" && $groupcode != "") {
 
-                $category = $DB->get_record('course_categories', array('idnumber' => $idvetyear));
-                $parentcategory = $DB->get_record('course_categories', array('id' => $category->parent));
-                $contextidparentcategory = $DB->get_record('context',
-                                array('contextlevel' => 40, 'instanceid' => $parentcategory->id))->id;
+				if ($DB->record_exists('course_categories', array('idnumber' => $idvetyear))) {
 
-                $tableteachername = array();
+					$category = $DB->get_record('course_categories', array('idnumber' => $idvetyear));
+					$parentcategory = $DB->get_record('course_categories', array('id' => $category->parent));
+					$contextidparentcategory = $DB->get_record('context',
+									array('contextlevel' => 40, 'instanceid' => $parentcategory->id))->id;
 
-                if ($DB->record_exists('cohort', array('idnumber' => $cohortcode,
-                    'contextid' => $contextidparentcategory))) {
+					$tableteachername = array();
 
-                    $cohort = $DB->get_record('cohort', array('idnumber' => $cohortcode,
-                        'contextid' => $contextidparentcategory));
+					if ($DB->record_exists('cohort', array('idnumber' => $cohortcode,
+						'contextid' => $contextidparentcategory))) {
 
-                    $cohortid = $cohort->id;
+						$cohort = $DB->get_record('cohort', array('idnumber' => $cohortcode,
+							'contextid' => $contextidparentcategory));
 
-                    if ($cohort->name != $groupname." ($idvet-$groupcode)") {
+						$cohortid = $cohort->id;
 
-                        if (!$DB->record_exists('local_cohortmanager_names',
-                                array('cohortid' => $cohortid, 'codeelp' => $courselp))) {
+						if ($cohort->name != $groupname." ($idvet-$groupcode)") {
 
-                            $cohortnameentry = new stdClass();
-                            $cohortnameentry->cohortid = $cohortid;
-                            $cohortnameentry->codeelp = $cohortcode;
-                            $cohortnameentry->cohortname = $groupname;
+							if (!$DB->record_exists('local_cohortmanager_names',
+									array('cohortid' => $cohortid, 'codeelp' => $cohortcode))) {
 
-                            $DB->insert_record('local_cohortmanager_names', $cohortnameentry);
+								$cohortnameentry = new stdClass();
+								$cohortnameentry->cohortid = $cohortid;
+								$cohortnameentry->codeelp = $cohortcode;
+								$cohortnameentry->cohortname = $groupname;
 
-                        } else if (!$DB->record_exists('local_cohortmanager_names',
-                                array('cohortid' => $cohortid, 'codeelp' => $cohortcode,
-                                    'cohortname' => $groupname))) {
+								$DB->insert_record('local_cohortmanager_names', $cohortnameentry);
 
-                            $cohortnameentry = $DB->get_record('local_cohortmanager_names',
-                                array('cohortid' => $cohortid, 'codeelp' => $cohortcode));
+							} else if (!$DB->record_exists('local_cohortmanager_names',
+									array('cohortid' => $cohortid, 'codeelp' => $cohortcode,
+										'cohortname' => $groupname))) {
 
-                            $cohortnameentry->cohortname = $groupname;
+								$cohortnameentry = $DB->get_record('local_cohortmanager_names',
+									array('cohortid' => $cohortid, 'codeelp' => $cohortcode));
 
-                            $DB->update_record('local_cohortmanager_names', $cohortnameentry);
-                        }
-                    }
+								$cohortnameentry->cohortname = $groupname;
 
-                    echo "La cohorte ".$cohort->name." existe\n";
+								$DB->update_record('local_cohortmanager_names', $cohortnameentry);
+							}
+						}
 
-                    $listcohortmembers = $DB->get_records('cohort_members',
-                                array('cohortid' => $cohortid));
+						echo "La cohorte ".$cohort->name." existe\n";
 
-                    $listtempcohortmembers = array();
+						$listcohortmembers = $DB->get_records('cohort_members',
+									array('cohortid' => $cohortid));
 
-                    foreach ($listcohortmembers as $cohortmembers) {
+						$listtempcohortmembers = array();
 
-                        $tempcohortmember = new stdClass();
-                        $tempcohortmember->userid = $cohortmembers->userid;
-                        $tempcohortmember->stillexists = 0;
+						foreach ($listcohortmembers as $cohortmembers) {
 
-                        $listtempcohortmembers[] = $tempcohortmember;
-                    }
+							$tempcohortmember = new stdClass();
+							$tempcohortmember->userid = $cohortmembers->userid;
+							$tempcohortmember->stillexists = 0;
 
-                    foreach ($group->childNodes as $groupmember) {
+							$listtempcohortmembers[] = $tempcohortmember;
+						}
 
-                        if ($groupmember->nodeType !== 1 ) {
-                            continue;
-                        }
+						foreach ($group->childNodes as $groupmember) {
 
-                        $username = $groupmember->getAttribute('UID_etu');
+							if ($groupmember->nodeType !== 1 ) {
+								continue;
+							}
 
-                        if ($DB->record_exists('user', array('username' => $username))) {
+							$username = $groupmember->getAttribute('UID_etu');
 
-                            $memberid = $DB->get_record('user',
-                                        array('username' => $username))->id;
+							if ($DB->record_exists('user', array('username' => $username))) {
 
-                            if ($DB->record_exists('cohort_members',
-                                        array('cohortid' => $cohortid, 'userid' => $memberid))) {
+								$memberid = $DB->get_record('user',
+											array('username' => $username))->id;
 
-                                foreach ($listtempcohortmembers as $tempcohortmember) {
+								if ($DB->record_exists('cohort_members',
+											array('cohortid' => $cohortid, 'userid' => $memberid))) {
 
-                                    if ($tempcohortmember->userid == $memberid) {
+									foreach ($listtempcohortmembers as $tempcohortmember) {
 
-                                        $tempcohortmember->stillexists = 1;
-                                    }
-                                }
-                            } else {
+										if ($tempcohortmember->userid == $memberid) {
 
-                                echo "Inscription de l'utilisateur ".$username."\n";
+											$tempcohortmember->stillexists = 1;
+										}
+									}
+								} else {
 
-                                cohort_add_member($cohortid, $memberid);
+									echo "Inscription de l'utilisateur ".$username."\n";
 
-                                echo "Utilisateur inscrit\n";
-                            }
-                        }
-                    }
+									cohort_add_member($cohortid, $memberid);
 
-                    if (isset($listtempcohortmembers)) {
+									echo "Utilisateur inscrit\n";
+								}
+							}
+						}
 
-                        foreach ($listtempcohortmembers as $tempcohortmember) {
+						if (isset($listtempcohortmembers)) {
 
-                            if ($tempcohortmember->stillexists == 0) {
+							foreach ($listtempcohortmembers as $tempcohortmember) {
 
-                                echo "Désinscription de l'utilisateur $tempcohortmember->userid "
-                                        . "de la cohorte $cohortid Cas 5\n";
+								if ($tempcohortmember->stillexists == 0) {
 
-                                cohort_remove_member($cohortid, $tempcohortmember->userid);
+									echo "Désinscription de l'utilisateur $tempcohortmember->userid "
+											. "de la cohorte $cohortid Cas 5\n";
 
-                                echo "Utilisateur désinscrit\n";
-                            }
-                        }
-                    }
-                } else {
+									cohort_remove_member($cohortid, $tempcohortmember->userid);
 
-                    $cohort = new stdClass();
-                    $cohort->contextid = $contextidparentcategory;
-                    $cohort->name = $group->getAttribute('GroupName')." ($idvet-$groupcode)";
-                    $cohort->idnumber = $cohortcode;
-                    $cohort->component = 'local_cohortmanager';
+									echo "Utilisateur désinscrit\n";
+								}
+							}
+						}
+					} else {
 
-                    echo "La cohorte ".$cohort->name." n'existe pas\n";
+						$cohort = new stdClass();
+						$cohort->contextid = $contextidparentcategory;
+						$cohort->name = $group->getAttribute('GroupName')." ($idvet-$groupcode)";
+						$cohort->idnumber = $cohortcode;
+						$cohort->component = 'local_cohortmanager';
 
-                    $cohortid = cohort_add_cohort($cohort);
+						echo "La cohorte ".$cohort->name." n'existe pas\n";
 
-                    echo "Elle est créée.\n";
+						$cohortid = cohort_add_cohort($cohort);
 
-                    $group->removeChild($group->lastChild);
-                    $groupmembers = $group->childNodes;
+						echo "Elle est créée.\n";
 
-                    foreach ($groupmembers as $groupmember) {
+						$group->removeChild($group->lastChild);
+						$groupmembers = $group->childNodes;
 
-                        if ($groupmember->nodeType !== 1 ) {
-                            continue;
-                        }
+						foreach ($groupmembers as $groupmember) {
 
-                        $username = $groupmember->getAttribute('StudentUID');
+							if ($groupmember->nodeType !== 1 ) {
+								continue;
+							}
 
-                        if ($DB->record_exists('user',
-                                array('username' => $username))) {
+							$username = $groupmember->getAttribute('StudentUID');
 
-                            echo "Inscription de l'utilisateur ".$username."\n";
+							if ($DB->record_exists('user',
+									array('username' => $username))) {
 
-                            $memberid = $DB->get_record('user',
-                                    array('username' => $username))->id;
+								echo "Inscription de l'utilisateur ".$username."\n";
 
-                            cohort_add_member($cohortid, $memberid);
+								$memberid = $DB->get_record('user',
+										array('username' => $username))->id;
 
-                            echo "Utilisateur inscrit\n";
-                        }
-                    }
-                }
+								cohort_add_member($cohortid, $memberid);
 
-                $listtreatedgroupsfakevac[] = $cohortcode;
+								echo "Utilisateur inscrit\n";
+							}
+						}
+					}
+
+					$listtreatedgroupsfakevac[] = $cohortcode;
+				}
             }
         }
     }

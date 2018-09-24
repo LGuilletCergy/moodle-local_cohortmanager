@@ -21,18 +21,26 @@
  * 95011 Cergy-Pontoise cedex
  * FRANCE
  *
- * Create cohorts and add ways to manage them for teachers.
+ * Send notification to teachers when they can link a new cohort.
  *
  * @package   local_cohortmanager
- * @copyright 2017 Laurent Guillet <laurent.guillet@u-cergy.fr>
+ * @copyright 2018 Laurent Guillet <laurent.guillet@u-cergy.fr>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
- * File : version.php
- * Version number
+ * File : tasks.php
+ * Scheduled tasks file
  */
 
-defined('MOODLE_INTERNAL') || die;
+defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2018092400;
-$plugin->requires = 2015051100;
-$plugin->component = 'local_cohortmanager';
+$tasks = array(
+    array(
+        'classname' => 'local_cohortmanager\task\syncothercohorts',
+        'blocking' => 0,
+        'minute' => '0',
+        'hour' => '8',
+        'day' => '*',
+        'dayofweek' => '*',
+        'month' => '*'
+    ),
+);
