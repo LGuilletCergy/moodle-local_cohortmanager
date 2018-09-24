@@ -102,9 +102,10 @@ class syncothercohorts extends \core\task\scheduled_task {
                 }
             }
 
-            $sql = "SELECT userid FROM {cohort_members} WHERE cohortid = $copycohortinfo->cohortid AND"
-                    . " userid NOT IN (SELECT userid FROM {cohortmembers} WHERE cohortid = $originalcohort->id)";
-            $listdeletestudents = $DB->get_records_sql($sql);
+            $sql = "SELECT * FROM mdl_cohort_members WHERE cohortid = $copycohortinfo->cohortid AND"
+                    . " userid NOT IN (SELECT userid FROM mdl_cohort_members WHERE cohortid = $originalcohort->id)";
+
+            $listdeletestudents = $DB->execute($sql);
 
             foreach ($listdeletestudents as $student) {
 
