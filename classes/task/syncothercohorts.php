@@ -107,7 +107,7 @@ class syncothercohorts extends \core\task\scheduled_task {
 
             $listdeletestudents = $DB->execute($sql);
 
-            if (isset($listdeletestudents)) {
+            if (is_array($listdeletestudents)) {
 
                 foreach ($listdeletestudents as $student) {
 
