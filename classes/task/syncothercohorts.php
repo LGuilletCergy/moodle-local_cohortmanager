@@ -77,7 +77,7 @@ class syncothercohorts extends \core\task\scheduled_task {
                 $copycohort->timemodified = time();
                 $copycohort->theme = $originalcohort->theme;
 
-                $copycohort->id = cohort_add_cohort($copycohort);
+                $copycohort->id = \cohort_add_cohort($copycohort);
 
                 $copycohortinfo = new \stdClass();
                 $copycohortinfo->cohortid = $copycohort->id;
@@ -98,7 +98,7 @@ class syncothercohorts extends \core\task\scheduled_task {
                 if (!$DB->record_exists('cohort_members',
                         array('cohortid' => $copycohortinfo->cohortid, 'userid' => $originalstudent->userid))) {
 
-                    cohort_add_member($copycohortinfo->cohortid, $originalstudent->userid);
+                    \cohort_add_member($copycohortinfo->cohortid, $originalstudent->userid);
                 }
             }
 
@@ -111,7 +111,7 @@ class syncothercohorts extends \core\task\scheduled_task {
 
                 foreach ($listdeletestudents as $student) {
 
-                    cohort_remove_member($copycohortinfo->cohortid, $student->userid);
+                    \cohort_remove_member($copycohortinfo->cohortid, $student->userid);
                 }
             }
         }
