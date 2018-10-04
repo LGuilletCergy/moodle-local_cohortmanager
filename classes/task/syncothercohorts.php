@@ -46,6 +46,8 @@ class syncothercohorts extends \core\task\scheduled_task {
 
         global $DB, $CFG;
 
+        require_once($CFG->dirroot .'/cohort/lib.php');
+
         $listvets = array('5B01A1', '5B01B1', '5B01C1', '2B01A1', '2B01B1', '7B03A1');
         $idnumberother = $CFG->yearprefix.'-8';
         $categoryother = $DB->get_record('course_categories', array('idnumber' => $idnumberother));
