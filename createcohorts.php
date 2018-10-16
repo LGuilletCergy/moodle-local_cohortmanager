@@ -430,8 +430,37 @@ if ($fileopeningvet == false) {
     $xpathvarvet = new Domxpath($xmldocvet);
 
     $anneunivsvet = $xpathvarvet->query("//Student/Annee_universitaire[@AnneeUniv=$CFG->thisyear]");
+    $student = null;
 
     foreach ($anneunivsvet as $anneuniv) {
+
+        if ($student != $anneuniv->parentNode) {
+
+            if ($student) {
+
+                $username = $student->getAttribute('StudentUID');
+                $user = $DB->get_record('user', array('username' => $username));
+
+                if ($DB->record_exists('user_info_field', array('shortname' => 'cohortinfo1'))
+                        && $DB->record_exists('user_info_field', array('shortname' => 'cohortinfo2'))) {
+
+                    $fieldinfo1id = $DB->get_record('user_info_field', array('shortname' => 'cohortinfo1'))->id;
+                    $fieldinfo2id = $DB->get_record('user_info_field', array('shortname' => 'cohortinfo2'))->id;
+
+                    if ($compteurvet == 1) {
+
+                        $DB->delete_records('user_info_data', array('userid' => $user->id, 'fieldid' => $fieldinfo1id));
+                        $DB->delete_records('user_info_data', array('userid' => $user->id, 'fieldid' => $fieldinfo2id));
+
+                    } else if ($compteurvet == 2) {
+
+                        $DB->delete_records('user_info_data', array('userid' => $user->id, 'fieldid' => $fieldinfo2id));
+                    }
+                }
+            }
+
+            $compteurvet = 1;
+        }
 
         $student = $anneuniv->parentNode;
         $username = $student->getAttribute('StudentUID');
@@ -620,6 +649,37 @@ if ($fileopeningvet == false) {
                                     $tempexistence->stillexists = 1;
                                 }
                             }
+                        }
+                    }
+
+                    // Ici, mettre dans son profil la VET de sa cohorte.
+
+                    if ($DB->record_exists('user_info_field', array('shortname' => 'cohortinfo1'))
+                            && $DB->record_exists('user_info_field', array('shortname' => 'cohortinfo2'))) {
+
+                        $vetname = $inscription->getAttribute('LibEtape');
+
+                        $fieldinfo1id = $DB->get_record('user_info_field', array('shortname' => 'cohortinfo1'))->id;
+                        $fieldinfo2id = $DB->get_record('user_info_field', array('shortname' => 'cohortinfo2'))->id;
+
+                        $recorduserinfo = new stdClass();
+                        $recorduserinfo->userid = $user->id;
+                        $recorduserinfo->data = $vetname;
+
+                        if ($compteurvet == 1) {
+
+                            // Si il n'y a pas de première vet de cohorte enregistrée pour l'utilisateur
+                            //  et que l'éventuelle deuxième n'est pas celle là.
+
+                            $recorduserinfo->fieldid = $fieldinfo1id;
+                            $DB->insert_record('user_info_data', $recorduserinfo);
+                        } else if ($compteurvet == 2) {
+
+                            // Si il n'y a pas de seconde vet de cohorte enregistrée pour l'utilisateur
+                            //  et que l'éventuelle première n'est pas celle là.
+
+                            $recorduserinfo->fieldid = $fieldinfo2id;
+                            $DB->insert_record('user_info_data', $recorduserinfo);
                         }
                     }
                 }
