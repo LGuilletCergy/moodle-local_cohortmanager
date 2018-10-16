@@ -668,18 +668,28 @@ if ($fileopeningvet == false) {
 
                         if ($compteurvet == 1) {
 
-                            // Si il n'y a pas de première vet de cohorte enregistrée pour l'utilisateur
-                            //  et que l'éventuelle deuxième n'est pas celle là.
-
                             $recorduserinfo->fieldid = $fieldinfo1id;
+                            if ($DB->record_exists('user_info_data',
+                                    array('userid' => $user->id, 'fieldid' => $fieldinfo1id))) {
+
+                                $recorduserinfo = $DB->get_record('user_info_data',
+                                        array('userid' => $user->id, 'fieldid' => $fieldinfo1id));
+                                $recorduserinfo->data = $vetname;
+
+                                $DB->update_record('user_info_data', $recorduserinfo);
+                            }
                             $DB->insert_record('user_info_data', $recorduserinfo);
                         } else if ($compteurvet == 2) {
 
-                            // Si il n'y a pas de seconde vet de cohorte enregistrée pour l'utilisateur
-                            //  et que l'éventuelle première n'est pas celle là.
+                            if ($DB->record_exists('user_info_data',
+                                    array('userid' => $user->id, 'fieldid' => $fieldinfo2id))) {
 
-                            $recorduserinfo->fieldid = $fieldinfo2id;
-                            $DB->insert_record('user_info_data', $recorduserinfo);
+                                $recorduserinfo = $DB->get_record('user_info_data',
+                                        array('userid' => $user->id, 'fieldid' => $fieldinfo2id));
+                                $recorduserinfo->data = $vetname;
+
+                                $DB->update_record('user_info_data', $recorduserinfo);
+                            }
                         }
 
                         $compteurvet++;
