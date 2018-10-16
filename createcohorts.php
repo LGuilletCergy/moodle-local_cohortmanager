@@ -677,8 +677,11 @@ if ($fileopeningvet == false) {
                                 $recorduserinfo->data = $vetname;
 
                                 $DB->update_record('user_info_data', $recorduserinfo);
+                            } else {
+
+                                $DB->insert_record('user_info_data', $recorduserinfo);
                             }
-                            $DB->insert_record('user_info_data', $recorduserinfo);
+
                         } else if ($compteurvet == 2) {
 
                             if ($DB->record_exists('user_info_data',
@@ -689,6 +692,9 @@ if ($fileopeningvet == false) {
                                 $recorduserinfo->data = $vetname;
 
                                 $DB->update_record('user_info_data', $recorduserinfo);
+                            } else {
+
+                                $DB->insert_record('user_info_data', $recorduserinfo);
                             }
                         }
 
