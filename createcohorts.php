@@ -681,6 +681,8 @@ if ($fileopeningvet == false) {
                             $recorduserinfo->fieldid = $fieldinfo2id;
                             $DB->insert_record('user_info_data', $recorduserinfo);
                         }
+
+                        $compteurvet++;
                     }
                 }
             }
