@@ -434,10 +434,10 @@ if ($fileopeningvet == false) {
 
     foreach ($anneunivsvet as $anneuniv) {
 
-        print_object($student->getAttribute('StudentUID'));
-        print_object($anneuniv->parentNode->getAttribute('StudentUID'));
-
         if ($student) {
+
+            print_object($student->getAttribute('StudentUID'));
+            print_object($anneuniv->parentNode->getAttribute('StudentUID'));
 
             if ($student->getAttribute('StudentUID') != $anneuniv->parentNode->getAttribute('StudentUID')) {
 
