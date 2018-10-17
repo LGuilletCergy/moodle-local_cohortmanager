@@ -434,46 +434,45 @@ if ($fileopeningvet == false) {
 
     foreach ($anneunivsvet as $anneuniv) {
 
-        if ($student) {
-
-            if ($student->getAttribute('StudentUID') != $anneuniv->parentNode->getAttribute('StudentUID')) {
-
-                $username = $student->getAttribute('StudentUID');
-                $user = $DB->get_record('user', array('username' => $username));
-
-                if ($DB->record_exists('user_info_field', array('shortname' => 'cohortinfo1'))
-                        && $DB->record_exists('user_info_field', array('shortname' => 'cohortinfo2'))) {
-
-                    $fieldinfo1id = $DB->get_record('user_info_field', array('shortname' => 'cohortinfo1'))->id;
-                    $fieldinfo2id = $DB->get_record('user_info_field', array('shortname' => 'cohortinfo2'))->id;
-
-                    if ($compteurvet == 1) {
-
-                        $DB->delete_records('user_info_data', array('userid' => $user->id, 'fieldid' => $fieldinfo1id));
-                        $DB->delete_records('user_info_data', array('userid' => $user->id, 'fieldid' => $fieldinfo2id));
-
-                    } else if ($compteurvet == 2) {
-
-                        $DB->delete_records('user_info_data', array('userid' => $user->id, 'fieldid' => $fieldinfo2id));
-                    }
-                }
-
-                $compteurvet = 1;
-            }
-        } else {
-
-            $compteurvet = 1;
-        }
-
         $student = $anneuniv->parentNode;
-        $username = $student->getAttribute('StudentUID');
 
         if ($DB->record_exists('user', array('username' => $username))) {
 
             $user = $DB->get_record('user', array('username' => $username));
 
-            $student = $anneuniv->parentNode;
-            $username = $student->getAttribute('StudentUID');
+            if ($student) {
+
+                if ($student->getAttribute('StudentUID') != $anneuniv->parentNode->getAttribute('StudentUID')) {
+
+                    $username = $student->getAttribute('StudentUID');
+                    $user = $DB->get_record('user', array('username' => $username));
+
+                    if ($DB->record_exists('user_info_field', array('shortname' => 'cohortinfo1'))
+                            && $DB->record_exists('user_info_field', array('shortname' => 'cohortinfo2'))) {
+
+                        $fieldinfo1id = $DB->get_record('user_info_field', array('shortname' => 'cohortinfo1'))->id;
+                        $fieldinfo2id = $DB->get_record('user_info_field', array('shortname' => 'cohortinfo2'))->id;
+
+                        if ($compteurvet == 1) {
+
+                            $DB->delete_records('user_info_data',
+                                    array('userid' => $user->id, 'fieldid' => $fieldinfo1id));
+                            $DB->delete_records('user_info_data',
+                                    array('userid' => $user->id, 'fieldid' => $fieldinfo2id));
+
+                        } else if ($compteurvet == 2) {
+
+                            $DB->delete_records('user_info_data',
+                                    array('userid' => $user->id, 'fieldid' => $fieldinfo2id));
+                        }
+                    }
+
+                    $compteurvet = 1;
+                }
+            } else {
+
+                $compteurvet = 1;
+            }
 
             if ($DB->record_exists('user', array('username' => $username))) {
 
