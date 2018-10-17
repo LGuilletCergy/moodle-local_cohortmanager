@@ -434,6 +434,9 @@ if ($fileopeningvet == false) {
 
     foreach ($anneunivsvet as $anneuniv) {
 
+        print_object($student);
+        print_object($anneuniv->parentNode);
+
         if ($student != $anneuniv->parentNode) {
 
             if ($student) {
