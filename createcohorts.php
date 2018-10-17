@@ -460,8 +460,9 @@ if ($fileopeningvet == false) {
                         $DB->delete_records('user_info_data', array('userid' => $user->id, 'fieldid' => $fieldinfo2id));
                     }
                 }
-            }
 
+                $compteurvet = 1;
+            }
         } else {
 
             $compteurvet = 1;
