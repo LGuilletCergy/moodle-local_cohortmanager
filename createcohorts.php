@@ -562,145 +562,159 @@ if ($fileopeningvet == false) {
                                 }
                             }
                         }
-                    }
 
-                    // Trouver la cohorte de composante ou la créer et l'y inscrire.
+                        // Ici, mettre dans son profil la VET de sa cohorte.
 
-                    $composantecode = substr($inscription->getAttribute('CodeEtape'), 0, 1);
+                        if ($DB->record_exists('user_info_field', array('shortname' => 'cohortinfo1'))
+                                && $DB->record_exists('user_info_field', array('shortname' => 'cohortinfo2'))) {
 
-                    $cohortcomposantecode = $CFG->yearprefix."-S".$composantecode;
-                    $categorycode = $CFG->yearprefix."-".$composantecode;
+                            $vetname = $inscription->getAttribute('LibEtape');
 
-                    if ($DB->record_exists('course_categories',
-                            array('idnumber' => $categorycode))) {
+                            $fieldinfo1id = $DB->get_record('user_info_field', array('shortname' => 'cohortinfo1'))->id;
+                            $fieldinfo2id = $DB->get_record('user_info_field', array('shortname' => 'cohortinfo2'))->id;
 
-                        $composantecategory = $DB->get_record('course_categories',
-                                array('idnumber' => $categorycode));
+                            $recorduserinfo = new stdClass();
+                            $recorduserinfo->userid = $user->id;
+                            $recorduserinfo->data = $vetname;
 
-                        $contextidcomposantecategory = $DB->get_record('context',
-                                array('instanceid' => $composantecategory->id,
-                                    'contextlevel' => CONTEXT_COURSECAT))->id;
+                            echo "Utilisateur : $username\n";
+                            echo "VET : $vetname\n";
+                            echo "Compteur VET : $compteurvet\n";
 
-                        if (!$DB->record_exists('cohort', array('idnumber' => $cohortcomposantecode,
-                            'contextid' => $contextidcomposantecategory))) {
+                            if ($compteurvet == 1) {
 
-                            $cohortcomposante = new stdClass();
-                            $cohortcomposante->contextid = $contextidcomposantecategory;
-                            $cohortcomposante->name = 'Etudiants de'
-                                    . ' '.substr($composantecategory->name, 4);
-                            $cohortcomposante->idnumber = $cohortcomposantecode;
-                            $cohortcomposante->component = 'local_cohortmanager';
+                                echo "Cas 1\n";
 
-                            echo "La cohorte ".$cohortcomposante->name." n'existe pas\n";
+                                $recorduserinfo->fieldid = $fieldinfo1id;
+                                if ($DB->record_exists('user_info_data',
+                                        array('userid' => $user->id, 'fieldid' => $fieldinfo1id))) {
 
-                            $cohortcomposanteid = cohort_add_cohort($cohortcomposante);
+                                    echo "Cas 1.1\n";
 
-                            echo "Elle est créée.\n";
-                        } else {
+                                    $recorduserinfo = $DB->get_record('user_info_data',
+                                            array('userid' => $user->id, 'fieldid' => $fieldinfo1id));
+                                    $recorduserinfo->data = $vetname;
 
-                            $cohortcomposanteid = $DB->get_record('cohort',
-                                    array('idnumber' => $cohortcomposantecode,
-                                        'contextid' => $contextidcomposantecategory))->id;
-                        }
+                                    $DB->update_record('user_info_data', $recorduserinfo);
+                                } else {
 
-                        // Ici, rajouter l'entrée dans local_cohortmanager_info.
+                                    echo "Cas 1.2\n";
 
-                        if ($DB->record_exists('local_cohortmanager_info',
-                                array('cohortid' => $cohortcomposanteid,
-                                    'codeelp' => 0))) {
+                                    $DB->insert_record('user_info_data', $recorduserinfo);
+                                }
 
-                            // Update record.
+                            } else if ($compteurvet == 2) {
 
-                            $cohortcomposanteinfo = $DB->get_record('local_cohortmanager_info',
-                                array('cohortid' => $cohortcomposanteid,
-                                    'codeelp' => 0));
+                                $recorduserinfo->fieldid = $fieldinfo2id;
+                                if ($DB->record_exists('user_info_data',
+                                        array('userid' => $user->id, 'fieldid' => $fieldinfo2id))) {
 
-                            $cohortcomposanteinfo->timesynced = $timesync;
+                                    echo "Cas 2.1\n";
 
-                            $DB->update_record('local_cohortmanager_info', $cohortcomposanteinfo);
+                                    $recorduserinfo = $DB->get_record('user_info_data',
+                                            array('userid' => $user->id, 'fieldid' => $fieldinfo2id));
+                                    $recorduserinfo->data = $vetname;
 
-                        } else {
+                                    $DB->update_record('user_info_data', $recorduserinfo);
+                                } else {
 
-                            $cohortcomposanteinfo = new stdClass();
-                            $cohortcomposanteinfo->cohortid = $cohortcomposanteid;
-                            $cohortcomposanteinfo->teacherid = null;
-                            $cohortcomposanteinfo->codeelp = 0;
-                            $cohortcomposanteinfo->timesynced = $timesync;
-                            $cohortcomposanteinfo->typecohort = "composante";
+                                    echo "Cas 2.2\n";
 
-                            $DB->insert_record('local_cohortmanager_info', $cohortcomposanteinfo);
-                        }
-
-                        if (!$DB->record_exists('cohort_members',
-                                array('cohortid' => $cohortcomposanteid, 'userid' => $user->id))) {
-
-                            echo "Inscription de l'utilisateur ".$username."\n";
-
-                            cohort_add_member($cohortcomposanteid, $user->id);
-
-                            echo "Utilisateur inscrit\n";
-                        } else {
-
-                            foreach ($listexistence as $tempexistence) {
-
-                                if ($tempexistence->userid == $user->id
-                                        && $tempexistence->cohortid == $cohortcomposanteid) {
-
-                                    $tempexistence->stillexists = 1;
+                                    $DB->insert_record('user_info_data', $recorduserinfo);
                                 }
                             }
+
+                            $compteurvet++;
                         }
                     }
 
-                    // Ici, mettre dans son profil la VET de sa cohorte.
-
-                    if ($DB->record_exists('user_info_field', array('shortname' => 'cohortinfo1'))
-                            && $DB->record_exists('user_info_field', array('shortname' => 'cohortinfo2'))) {
-
-                        $vetname = $inscription->getAttribute('LibEtape');
-
-                        $fieldinfo1id = $DB->get_record('user_info_field', array('shortname' => 'cohortinfo1'))->id;
-                        $fieldinfo2id = $DB->get_record('user_info_field', array('shortname' => 'cohortinfo2'))->id;
-
-                        $recorduserinfo = new stdClass();
-                        $recorduserinfo->userid = $user->id;
-                        $recorduserinfo->data = $vetname;
-
-                        if ($compteurvet == 1) {
-
-                            $recorduserinfo->fieldid = $fieldinfo1id;
-                            if ($DB->record_exists('user_info_data',
-                                    array('userid' => $user->id, 'fieldid' => $fieldinfo1id))) {
-
-                                $recorduserinfo = $DB->get_record('user_info_data',
-                                        array('userid' => $user->id, 'fieldid' => $fieldinfo1id));
-                                $recorduserinfo->data = $vetname;
-
-                                $DB->update_record('user_info_data', $recorduserinfo);
-                            } else {
-
-                                $DB->insert_record('user_info_data', $recorduserinfo);
-                            }
-
-                        } else if ($compteurvet == 2) {
-
-                            $recorduserinfo->fieldid = $fieldinfo2id;
-                            if ($DB->record_exists('user_info_data',
-                                    array('userid' => $user->id, 'fieldid' => $fieldinfo2id))) {
-
-                                $recorduserinfo = $DB->get_record('user_info_data',
-                                        array('userid' => $user->id, 'fieldid' => $fieldinfo2id));
-                                $recorduserinfo->data = $vetname;
-
-                                $DB->update_record('user_info_data', $recorduserinfo);
-                            } else {
-
-                                $DB->insert_record('user_info_data', $recorduserinfo);
-                            }
-                        }
-
-                        $compteurvet++;
-                    }
+//                    // Trouver la cohorte de composante ou la créer et l'y inscrire.
+//
+//                    $composantecode = substr($inscription->getAttribute('CodeEtape'), 0, 1);
+//
+//                    $cohortcomposantecode = $CFG->yearprefix."-S".$composantecode;
+//                    $categorycode = $CFG->yearprefix."-".$composantecode;
+//
+//                    if ($DB->record_exists('course_categories',
+//                            array('idnumber' => $categorycode))) {
+//
+//                        $composantecategory = $DB->get_record('course_categories',
+//                                array('idnumber' => $categorycode));
+//
+//                        $contextidcomposantecategory = $DB->get_record('context',
+//                                array('instanceid' => $composantecategory->id,
+//                                    'contextlevel' => CONTEXT_COURSECAT))->id;
+//
+//                        if (!$DB->record_exists('cohort', array('idnumber' => $cohortcomposantecode,
+//                            'contextid' => $contextidcomposantecategory))) {
+//
+//                            $cohortcomposante = new stdClass();
+//                            $cohortcomposante->contextid = $contextidcomposantecategory;
+//                            $cohortcomposante->name = 'Etudiants de'
+//                                    . ' '.substr($composantecategory->name, 4);
+//                            $cohortcomposante->idnumber = $cohortcomposantecode;
+//                            $cohortcomposante->component = 'local_cohortmanager';
+//
+//                            echo "La cohorte ".$cohortcomposante->name." n'existe pas\n";
+//
+//                            $cohortcomposanteid = cohort_add_cohort($cohortcomposante);
+//
+//                            echo "Elle est créée.\n";
+//                        } else {
+//
+//                            $cohortcomposanteid = $DB->get_record('cohort',
+//                                    array('idnumber' => $cohortcomposantecode,
+//                                        'contextid' => $contextidcomposantecategory))->id;
+//                        }
+//
+//                        // Ici, rajouter l'entrée dans local_cohortmanager_info.
+//
+//                        if ($DB->record_exists('local_cohortmanager_info',
+//                                array('cohortid' => $cohortcomposanteid,
+//                                    'codeelp' => 0))) {
+//
+//                            // Update record.
+//
+//                            $cohortcomposanteinfo = $DB->get_record('local_cohortmanager_info',
+//                                array('cohortid' => $cohortcomposanteid,
+//                                    'codeelp' => 0));
+//
+//                            $cohortcomposanteinfo->timesynced = $timesync;
+//
+//                            $DB->update_record('local_cohortmanager_info', $cohortcomposanteinfo);
+//
+//                        } else {
+//
+//                            $cohortcomposanteinfo = new stdClass();
+//                            $cohortcomposanteinfo->cohortid = $cohortcomposanteid;
+//                            $cohortcomposanteinfo->teacherid = null;
+//                            $cohortcomposanteinfo->codeelp = 0;
+//                            $cohortcomposanteinfo->timesynced = $timesync;
+//                            $cohortcomposanteinfo->typecohort = "composante";
+//
+//                            $DB->insert_record('local_cohortmanager_info', $cohortcomposanteinfo);
+//                        }
+//
+//                        if (!$DB->record_exists('cohort_members',
+//                                array('cohortid' => $cohortcomposanteid, 'userid' => $user->id))) {
+//
+//                            echo "Inscription de l'utilisateur ".$username."\n";
+//
+//                            cohort_add_member($cohortcomposanteid, $user->id);
+//
+//                            echo "Utilisateur inscrit\n";
+//                        } else {
+//
+//                            foreach ($listexistence as $tempexistence) {
+//
+//                                if ($tempexistence->userid == $user->id
+//                                        && $tempexistence->cohortid == $cohortcomposanteid) {
+//
+//                                    $tempexistence->stillexists = 1;
+//                                }
+//                            }
+//                        }
+//                    }
                 }
             }
         }
