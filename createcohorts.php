@@ -684,6 +684,7 @@ if ($fileopeningvet == false) {
 
                         } else if ($compteurvet == 2) {
 
+                            $recorduserinfo->fieldid = $fieldinfo2id;
                             if ($DB->record_exists('user_info_data',
                                     array('userid' => $user->id, 'fieldid' => $fieldinfo2id))) {
 
