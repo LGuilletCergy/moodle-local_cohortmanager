@@ -434,12 +434,12 @@ if ($fileopeningvet == false) {
 
     foreach ($anneunivsvet as $anneuniv) {
 
-        print_object($student);
-        print_object($anneuniv->parentNode);
+        print_object($student->getAttribute('StudentUID'));
+        print_object($anneuniv->parentNode->getAttribute('StudentUID'));
 
-        if ($student != $anneuniv->parentNode) {
+        if ($student) {
 
-            if ($student) {
+            if ($student->getAttribute('StudentUID') != $anneuniv->parentNode->getAttribute('StudentUID')) {
 
                 $username = $student->getAttribute('StudentUID');
                 $user = $DB->get_record('user', array('username' => $username));
@@ -461,6 +461,8 @@ if ($fileopeningvet == false) {
                     }
                 }
             }
+
+        } else {
 
             $compteurvet = 1;
         }
