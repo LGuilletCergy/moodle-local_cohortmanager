@@ -27,8 +27,8 @@
  * @copyright 2017 Laurent Guillet <laurent.guillet@u-cergy.fr>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
- * File : createcohorts.php
- * Create cohorts, assign cohort members and fill table local_cohortmanager_info
+ * File : deletecohorts.php
+ * Script to launch manually to delete certain cohorts. To edit depending on what you want to delete.
  */
 
 define('CLI_SCRIPT', true);
