@@ -86,7 +86,7 @@ class syncothercohorts extends \core\task\scheduled_task {
                 $copycohortinfo->teacherid = null;
                 $copycohortinfo->codeelp = 0;
                 $copycohortinfo->timesynced = time();
-                $copycohortinfo->typecohort = 'copie-'.$originalcohort->id;
+                $copycohortinfo->typecohort = $typecode;
 
                 $DB->insert_record('local_cohortmanager_info', $copycohortinfo);
             }
