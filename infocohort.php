@@ -76,8 +76,8 @@ echo $OUTPUT->header();
 
 $contextcohort = context::instance_by_id($cohort->contextid);
 
-if ((has_capability('local/cohortmanager:viewinfocategory', $contextcohort) && $origin == 'course_cat') || 
-	(has_capability('local/cohortmanager:viewinfocourse', $contextcohort) && $origin == 'course')) {
+if ((has_capability('local/cohortmanager:viewinfocategory', $context) && $origin == 'course_cat') ||
+	(has_capability('local/cohortmanager:viewinfocourse', $context) && $origin == 'course')) {
 
     echo get_string('cohortusers', 'local_cohortmanager', $cohort->name)."<br><br>";
 
