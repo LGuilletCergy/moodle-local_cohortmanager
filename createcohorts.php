@@ -1132,6 +1132,9 @@ foreach ($listcohortsservicesdb as $cohortservicedb) {
     }
 }
 
+/* Commenté car la composition du code service a changé dans les nouveaux fichiers DOKEOS
+ * et que je ne voyais pas où on utilisait ces cohortes.
+
 $xmldocservice = new DOMDocument();
 $fileopeningservice = $xmldocservice->load('/home/referentiel/sefiap_personnel_composante.xml');
 if ($fileopeningservice == false) {
@@ -1267,6 +1270,8 @@ if ($fileopeningservice == false) {
         }
     }
 }
+ *
+ */
 
 // Cohortes des faux vacataires.
 
