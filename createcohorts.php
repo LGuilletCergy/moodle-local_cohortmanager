@@ -1744,7 +1744,7 @@ if ($fileopeningniveau == false) {
             if ($tempexistence->stillexists == 0) {
 
                 echo "Désinscription de l'utilisateur $tempexistence->userid "
-                        . "de la cohorte $cohortid Cas 7\n";
+                        . "de la cohorte $tempexistence->cohortid Cas 7\n";
 
                 cohort_remove_member($tempexistence->cohortid, $tempexistence->userid);
 
