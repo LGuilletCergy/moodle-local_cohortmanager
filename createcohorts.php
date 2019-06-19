@@ -766,7 +766,7 @@ if ($fileopeningvet == false) {
                     }
                     // Trouver la cohorte ou la créer et l'y inscrire.
 
-                    $cohortcode = $CFG->yearprefix."-".$inscription->getAttribute('CodeEtape');
+                    $cohortcode = $CFG->previousyearprefix."-".$inscription->getAttribute('CodeEtape');
 
                     if ($DB->record_exists('course_categories', array('idnumber' => $cohortcode))) {
 
@@ -899,8 +899,8 @@ if ($fileopeningvet == false) {
 
                     $composantecode = substr($inscription->getAttribute('CodeEtape'), 0, 1);
 
-                    $cohortcomposantecode = $CFG->yearprefix."-S".$composantecode;
-                    $categorycode = $CFG->yearprefix."-".$composantecode;
+                    $cohortcomposantecode = $CFG->previousyearprefix."-S".$composantecode;
+                    $categorycode = $CFG->previousyearprefix."-".$composantecode;
 
                     if ($DB->record_exists('course_categories',
                             array('idnumber' => $categorycode))) {
