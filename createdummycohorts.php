@@ -53,7 +53,7 @@ if (!$DB->record_exists('cohort', array('idnumber' => 'Y2019-8S3TES', 'contextid
     echo "Elle est créée.\n";
 } else {
 
-    $cohortid = $DB->get_record('cohort', array('idnumber' => 'Y2019-8S3TES', 'contextid' => 223889));
+    $cohortid = $DB->get_record('cohort', array('idnumber' => 'Y2019-8S3TES', 'contextid' => 223889))->id;
 }
 
 $sql = "SELECT * FROM {user} WHERE username LIKE '%etudiant%'";
