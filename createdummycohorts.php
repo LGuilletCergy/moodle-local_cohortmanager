@@ -64,7 +64,7 @@ foreach ($listdummystudents as $dummystudent) {
 
     if (!$DB->record_exists('cohort_members', array('cohortid' => $cohortid, 'userid' => $dummystudent->id))) {
 
-        echo "Inscription de l'utilisateur ".$username."\n";
+        echo "Inscription de l'utilisateur ".$dummystudent->username."\n";
 
         cohort_add_member($cohortid, $dummystudent->id);
 
