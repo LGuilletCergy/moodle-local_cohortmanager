@@ -1006,6 +1006,8 @@ if ($fileopeningvet == false) {
 
 // Cohorte Tous étudiants.
 
+
+
 if (!$DB->record_exists('cohort', array('idnumber' => 1,
                 'contextid' => context_system::instance()->id))) {
 
@@ -1056,6 +1058,39 @@ if ($fileopeningall == false) {
     $anneunivsall = $xpathvarall->query("//Student/Annee_universitaire[@AnneeUniv=$CFG->thisyear]");
 
     foreach ($anneunivsall as $anneuniv) {
+
+        $student = $anneuniv->parentNode;
+        $username = $student->getAttribute('StudentUID');
+
+        if ($DB->record_exists('user', array('username' => $username))) {
+
+            $memberid = $DB->get_record('user',
+                        array('username' => $username))->id;
+
+            if ($DB->record_exists('cohort_members',
+                        array('cohortid' => $cohortid, 'userid' => $memberid))) {
+
+                foreach ($listtempcohortmembers as $tempcohortmember) {
+
+                    if ($tempcohortmember->userid == $memberid) {
+
+                        $tempcohortmember->stillexists = 1;
+                    }
+                }
+            } else {
+
+                echo "Inscription de l'utilisateur ".$username."\n";
+
+                cohort_add_member($cohortid, $memberid);
+
+                echo "Utilisateur inscrit\n";
+            }
+        }
+    }
+
+    $previousanneunivsall = $xpathvarall->query("//Student/Annee_universitaire[@AnneeUniv=$CFG->previousyear]");
+
+    foreach ($previousanneunivsall as $anneuniv) {
 
         $student = $anneuniv->parentNode;
         $username = $student->getAttribute('StudentUID');
