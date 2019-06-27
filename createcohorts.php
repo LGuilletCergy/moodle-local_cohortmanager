@@ -321,6 +321,11 @@ if ($fileopeningens == false) {
                         $cohortid = cohort_add_cohort($cohort);
 
                         echo "Elle est créée.\n";
+                    } else {
+
+                        $cohort = $DB->get_record('cohort', array('idnumber' => $cohortcode,
+                            'contextid' => $contextidparentcategory));
+                        $cohortid = $cohort->id;
                     }
                 }
 
