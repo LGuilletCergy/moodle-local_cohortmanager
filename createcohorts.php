@@ -277,6 +277,8 @@ if ($fileopeningens == false) {
 
     $xpathvarens = new Domxpath($xmldocens);
 
+    $listtreatedgroups = array();
+
     $groupsens = $xpathvarens->query('//Structure_diplome/Teacher/Cours/Group');
 
     foreach ($groupsens as $group) {
