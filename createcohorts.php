@@ -40,7 +40,7 @@ require_once($CFG->libdir .'/filelib.php');
 
 $timesync = time();
 
-// Cohortes de groupes remplies.
+// Cohortes de groupes remplies. Pas sur UE Libres.
 
 $xmldocetuens = new DOMDocument();
 $fileopeningetuens = $xmldocetuens->load('/home/referentiel/dokeos_elp_etu_ens.xml');
@@ -267,7 +267,7 @@ if ($fileopeningetuens == false) {
     }
 }
 
-// Cohortes de groupes vides.
+// Cohortes de groupes vides. Pas sur UE Libres.
 
 $xmldocens = new DOMDocument();
 $fileopeningens = $xmldocens->load('/home/referentiel/dokeos_elp_ens.xml');
@@ -1594,7 +1594,7 @@ if ($fileopeningservice == false) {
  *
  */
 
-// Cohortes des faux vacataires.
+// Cohortes des faux vacataires. Pas sur UE Libres.
 
 $xmldocfakevac = new DOMDocument();
 $fileopeningfakevac = $xmldocfakevac->load('/home/referentiel/dokeos_vac_tempo.xml');
