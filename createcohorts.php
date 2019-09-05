@@ -1890,7 +1890,7 @@ if ($fileopeningcomposanteprof == false) {
                     echo "Utilisateur inscrit\n";
                 } else {
 
-                    foreach ($listexistence as $tempexistence) {
+                    foreach ($listexistenceprof as $tempexistence) {
 
                         if ($tempexistence->userid == $user->id &&
                                 $tempexistence->cohortid == $cohortcomposanteid) {
@@ -2045,7 +2045,7 @@ if ($fileopeningniveau == false) {
                     echo "Utilisateur inscrit\n";
                 } else {
 
-                    foreach ($listexistence as $tempexistence) {
+                    foreach ($listexistenceniveaux as $tempexistence) {
 
                         if ($tempexistence->userid == $user->id &&
                                 $tempexistence->cohortid == $cohortniveauid) {
@@ -2058,9 +2058,9 @@ if ($fileopeningniveau == false) {
         }
     }
 
-    if (isset($listexistence)) {
+    if (isset($listexistenceniveaux)) {
 
-        foreach ($listexistence as $tempexistence) {
+        foreach ($listexistenceniveaux as $tempexistence) {
 
             if ($tempexistence->stillexists == 0) {
 
