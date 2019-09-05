@@ -404,7 +404,7 @@ if ($fileopeningens == false) {
     }
 }
 
-// Cohortes de VETs remplies et de composantes.
+// Cohortes de VETs remplies et de composantes. Modifié sur UE Libres pour ne pas tester l'existence des catégories.
 
 $sqllistcohortsvets = "SELECT distinct cohortid FROM {local_cohortmanager_info} WHERE "
         . "(typecohort LIKE 'vet' OR typecohort LIKE 'composante')";
@@ -1777,7 +1777,7 @@ if ($fileopeningfakevac == false) {
     }
 }
 
-// Cohortes de profs de composantes.
+// Cohortes de profs de composantes. Pas sur UE Libres.
 
 $sqllistcohortscomposanteprof = "SELECT distinct cohortid FROM {local_cohortmanager_info} WHERE "
         . "typecohort LIKE 'composanteprof'";
@@ -1920,7 +1920,7 @@ if ($fileopeningcomposanteprof == false) {
     }
 }
 
-// Cohortes de niveaux.
+// Cohortes de niveaux. Modifié dans UE Libres pour ne pas tester l'existence des catégories.
 
 $sqllistcohortsniveaux = "SELECT distinct cohortid FROM {local_cohortmanager_info} WHERE "
         . "typecohort LIKE 'niveau'";
