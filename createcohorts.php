@@ -1920,7 +1920,7 @@ if ($fileopeningcomposanteprof == false) {
     }
 }
 
-// Cohortes de niveaux. Modifié dans UE Libres pour ne pas tester l'existence des catégories.
+// Cohortes de niveaux. Pas dans UE Libres.
 
 $sqllistcohortsniveaux = "SELECT distinct cohortid FROM {local_cohortmanager_info} WHERE "
         . "typecohort LIKE 'niveau'";
