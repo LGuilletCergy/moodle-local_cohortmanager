@@ -27,8 +27,8 @@
  * @copyright 2019 Laurent Guillet <laurent.guillet@u-cergy.fr>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
- * File : manuallyemptycohorts.php
- * Script to launch manually to remove cohort members. To edit depending on what you want to delete.
+ * File : manuallydeleteemptycohorts.php
+ * Script to launch manually to remove cohort with no members and not used. To edit depending on what you want to delete.
  */
 
 define('CLI_SCRIPT', true);
