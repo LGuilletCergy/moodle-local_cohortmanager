@@ -49,6 +49,8 @@ foreach ($listcohorts as $cohort) {
     if (!$DB->record_exists('cohort_members', array('cohortid' => $cohort->id)) &&
             !$DB->record_exists('enrol', array('enrol' => 'cohort', 'customint1' => $cohort->id))) {
 
+        echo $cohort->idnumber."\n";
+
         cohort_delete_cohort($cohort);
     }
 }
