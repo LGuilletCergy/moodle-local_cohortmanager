@@ -39,7 +39,7 @@ require_once($CFG->dirroot .'/course/lib.php');
 
 global $DB;
 
-$sqllistcohorts = "SELECT * FROM {cohort} WHERE idnumber LIKE 'Y2019-' "
+$sqllistcohorts = "SELECT * FROM {cohort} WHERE idnumber LIKE 'Y2019-%' "
         . "AND component LIKE 'local_cohortmanager'";
 
 $listcohorts = $DB->get_records_sql($sqllistcohorts);
