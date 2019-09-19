@@ -39,15 +39,14 @@ require_once($CFG->dirroot .'/course/lib.php');
 
 global $DB;
 
-$sqllistcohorts = "SELECT * FROM {cohort} WHERE idnumber LIKE 'Y2019-%' "
+$sqllistcohorts = "SELECT * FROM {cohort} WHERE idnumber LIKE 'Y2019-1%' "
         . "AND component LIKE 'local_cohortmanager'";
 
 $listcohorts = $DB->get_records_sql($sqllistcohorts);
 
 foreach ($listcohorts as $cohort) {
 
-    if (!$DB->record_exists('cohort_members', array('cohortid' => $cohort->id)) &&
-            !$DB->record_exists('enrol', array('enrol' => 'cohort', 'customint1' => $cohort->id))) {
+    if (!$DB->record_exists('cohort_members', array('cohortid' => $cohort->id))) {
 
         echo $cohort->idnumber."\n";
 
