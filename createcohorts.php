@@ -1018,6 +1018,8 @@ if ($fileopeningvet == false) {
                 echo "Utilisateur désinscrit\n";
             }
         }
+
+        unset($listexistence);
     }
 }
 
@@ -1953,6 +1955,8 @@ if ($fileopeningcomposanteprof == false) {
                 echo "Utilisateur désinscrit\n";
             }
         }
+
+        unset($listexistenceprof);
     }
 }
 
@@ -2112,6 +2116,8 @@ if ($fileopeningniveau == false) {
                 echo "Utilisateur désinscrit\n";
             }
         }
+
+        unset($listexistenceniveaux);
     }
 }
 
