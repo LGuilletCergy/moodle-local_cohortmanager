@@ -174,8 +174,10 @@ if ($fileopeningetuens == false) {
 
                                 if ($tempcohortmember->stillexists == 0) {
 
-                                    echo "Désinscription de l'utilisateur $tempcohortmember->userid"
-                                                    . " de la cohorte $cohortid Cas 1\n";
+                                    $user = $DB->get_record('user', array('id' => $tempcohortmember->userid));
+
+                                    echo "Désinscription de l'utilisateur $user->username"
+                                                    . " de la cohorte $cohort->name Cas 1\n";
 
                                     cohort_remove_member($cohortid, $tempcohortmember->userid);
 
@@ -183,6 +185,8 @@ if ($fileopeningetuens == false) {
                                 }
                             }
                         }
+
+                        unset($listtempcohortmembers);
                     } else {
 
                         $cohort = new stdClass();
