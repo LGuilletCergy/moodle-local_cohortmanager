@@ -118,19 +118,6 @@ if ($fileopeningetuens == false) {
 
                         echo "La cohorte ".$cohort->name." existe\n";
 
-                        $listcohortmembers = $DB->get_records('cohort_members', array('cohortid' => $cohortid));
-
-                        $listtempcohortmembers = array();
-
-                        foreach ($listcohortmembers as $cohortmembers) {
-
-                            $tempcohortmember = new stdClass();
-                            $tempcohortmember->userid = $cohortmembers->userid;
-                            $tempcohortmember->stillexists = 0;
-
-                            $listtempcohortmembers[] = $tempcohortmember;
-                        }
-
                         $group->removeChild($group->lastChild);
 
                         foreach ($group->childNodes as $groupmember) {
@@ -147,17 +134,8 @@ if ($fileopeningetuens == false) {
                                 $memberid = $DB->get_record('user',
                                         array('username' => $username))->id;
 
-                                if ($DB->record_exists('cohort_members',
+                                if (!$DB->record_exists('cohort_members',
                                         array('cohortid' => $cohortid, 'userid' => $memberid))) {
-
-                                    foreach ($listtempcohortmembers as $tempcohortmember) {
-
-                                        if ($tempcohortmember->userid == $memberid) {
-
-                                            $tempcohortmember->stillexists = 1;
-                                        }
-                                    }
-                                } else {
 
                                     echo "Inscription de l'utilisateur ".$username."\n";
 
@@ -167,26 +145,6 @@ if ($fileopeningetuens == false) {
                                 }
                             }
                         }
-
-                        if (isset($listtempcohortmembers)) {
-
-                            foreach ($listtempcohortmembers as $tempcohortmember) {
-
-                                if ($tempcohortmember->stillexists == 0) {
-
-                                    $user = $DB->get_record('user', array('id' => $tempcohortmember->userid));
-
-                                    echo "Désinscription de l'utilisateur $user->username"
-                                                    . " de la cohorte $cohort->name Cas 1\n";
-
-                                    cohort_remove_member($cohortid, $tempcohortmember->userid);
-
-                                    echo "Utilisateur désinscrit\n";
-                                }
-                            }
-                        }
-
-                        unset($listtempcohortmembers);
                     } else {
 
                         $cohort = new stdClass();
