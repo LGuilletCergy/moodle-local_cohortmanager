@@ -2134,7 +2134,8 @@ if ($fileopeningvet == false) {
 
                 echo "Test 2\n";
 
-                if ($oldstudent->getAttribute('StudentUID') != $anneuniv->parentNode->getAttribute('StudentUID')) {
+                if ($oldstudent->getAttribute('StudentUIDEisti') !=
+                        $anneuniv->parentNode->getAttribute('StudentUIDEisti')) {
 
                     echo "Test 3\n";
 
@@ -2333,7 +2334,7 @@ if ($fileopeningvet == false) {
     foreach ($previousanneunivsvet as $anneuniv) {
 
         $student = $anneuniv->parentNode;
-        $username = $student->getAttribute('StudentUID');
+        $username = 'i-'.$student->getAttribute('StudentUIDEisti');
 
         if ($DB->record_exists('user', array('username' => $username))) {
 
@@ -2341,7 +2342,8 @@ if ($fileopeningvet == false) {
 
             if ($previousoldstudent) {
 
-                if ($previousoldstudent->getAttribute('StudentUID') != $anneuniv->parentNode->getAttribute('StudentUID')) {
+                if ($previousoldstudent->getAttribute('StudentUIDEisti') !=
+                        $anneuniv->parentNode->getAttribute('StudentUIDEisti')) {
 
                     if ($DB->record_exists('user_info_field', array('shortname' => 'cohortinfo1'))
                             && $DB->record_exists('user_info_field', array('shortname' => 'cohortinfo2'))) {
