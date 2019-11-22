@@ -2128,9 +2128,15 @@ if ($fileopeningvet == false) {
 
             $user = $DB->get_record('user', array('username' => $username));
 
+            echo "Test 1";
+
             if ($oldstudent) {
 
+                echo "Test 2";
+
                 if ($oldstudent->getAttribute('StudentUID') != $anneuniv->parentNode->getAttribute('StudentUID')) {
+
+                    echo "Test 3";
 
                     if ($DB->record_exists('user_info_field', array('shortname' => 'cohortinfo1'))
                             && $DB->record_exists('user_info_field', array('shortname' => 'cohortinfo2'))) {
@@ -2161,13 +2167,19 @@ if ($fileopeningvet == false) {
 
             $oldstudent = $student;
 
+            echo "Test 4";
+
             if ($DB->record_exists('user', array('username' => $username))) {
+
+                echo "Test 5";
 
                 $memberid = $DB->get_record('user', array('username' => $username))->id;
 
                 // Lister toutes ses inscriptions.
 
                 foreach ($anneuniv->childNodes as $inscription) {
+
+                    echo "Test 6";
 
                     if ($inscription->nodeType !== 1) {
                         continue;
@@ -2176,12 +2188,10 @@ if ($fileopeningvet == false) {
 
                     // Ne faire que les 2 cohortes de bachelors pour l'EISTI.
 
-                    echo "Test 1";
-
                     if ($inscription->getAttribute('CodeCycle') == 'c0_bachelor01' ||
                             $inscription->getAttribute('CodeCycle') == 'c0_bachelor02' ) {
 
-                        echo "Test 2";
+                        echo "Test 7";
 
                         $cohortcode = $CFG->yearprefix."-".$inscription->getAttribute('CodeEtape');
 
@@ -2533,6 +2543,6 @@ if ($fileopeningvet == false) {
     }
 }
 
-mail('s.ingenierie.logicielle@ml.u-cergy.fr', 'Cohortes de VETs EISTI traitées',
-        "\nLa partie du script gérant les cohortes de VETs EISTI vient de s'achever à"
-        . " ".date("d/m/Y à G:i")."");
+//mail('s.ingenierie.logicielle@ml.u-cergy.fr', 'Cohortes de VETs EISTI traitées',
+//        "\nLa partie du script gérant les cohortes de VETs EISTI vient de s'achever à"
+//        . " ".date("d/m/Y à G:i")."");
