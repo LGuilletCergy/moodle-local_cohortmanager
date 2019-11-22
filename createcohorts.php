@@ -2086,6 +2086,8 @@ $timesync = time();
 
 // Cohortes de VETs remplies et de composantes. Modifié sur UE Libres pour ne pas tester l'existence des catégories.
 
+echo "Test 0";
+
 $sqllistcohortsvets = "SELECT distinct cohortid FROM {local_cohortmanager_info} WHERE "
         . "(typecohort LIKE 'veteisti')";
 
@@ -2108,11 +2110,15 @@ foreach ($listcohortsvetseistidb as $cohortvetdb) {
     }
 }
 
+echo "Test 0.1";
+
 $xmldocvet = new DOMDocument();
 $fileopeningvet = $xmldocvet->load('/home/referentiel/DOKEOS_Etudiants_Inscriptions_eisti.xml');
 if ($fileopeningvet == false) {
     echo "Impossible de lire le fichier source.\n";
 } else {
+
+    echo "Test 0.2";
 
     $xpathvarvet = new Domxpath($xmldocvet);
 
@@ -2120,6 +2126,8 @@ if ($fileopeningvet == false) {
     $oldstudent = null;
 
     foreach ($anneunivsvet as $anneuniv) {
+
+        echo "Test 0.3";
 
         $student = $anneuniv->parentNode;
         $username = $student->getAttribute('StudentUID');
