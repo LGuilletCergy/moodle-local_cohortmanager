@@ -2176,8 +2176,12 @@ if ($fileopeningvet == false) {
 
                     // Ne faire que les 2 cohortes de bachelors pour l'EISTI.
 
+                    echo "Test 1";
+
                     if ($inscription->getAttribute('CodeCycle') == 'c0_bachelor01' ||
                             $inscription->getAttribute('CodeCycle') == 'c0_bachelor02' ) {
+
+                        echo "Test 2";
 
                         $cohortcode = $CFG->yearprefix."-".$inscription->getAttribute('CodeEtape');
 
