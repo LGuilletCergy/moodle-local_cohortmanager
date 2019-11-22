@@ -2086,8 +2086,6 @@ $timesync = time();
 
 // Cohortes de VETs remplies et de composantes. Modifié sur UE Libres pour ne pas tester l'existence des catégories.
 
-echo "Test 0";
-
 $sqllistcohortsvets = "SELECT distinct cohortid FROM {local_cohortmanager_info} WHERE "
         . "(typecohort LIKE 'veteisti')";
 
@@ -2110,15 +2108,11 @@ foreach ($listcohortsvetseistidb as $cohortvetdb) {
     }
 }
 
-echo "Test 0.1";
-
 $xmldocvet = new DOMDocument();
 $fileopeningvet = $xmldocvet->load('/home/referentiel/DOKEOS_Etudiants_Inscriptions_eisti.xml');
 if ($fileopeningvet == false) {
     echo "Impossible de lire le fichier source.\n";
 } else {
-
-    echo "Test 0.2";
 
     $xpathvarvet = new Domxpath($xmldocvet);
 
@@ -2127,24 +2121,22 @@ if ($fileopeningvet == false) {
 
     foreach ($anneunivsvet as $anneuniv) {
 
-        echo "Test 0.3";
-
         $student = $anneuniv->parentNode;
-        $username = $student->getAttribute('StudentUID');
+        $username = $student->getAttribute('StudentUIDEisti');
 
         if ($DB->record_exists('user', array('username' => $username))) {
 
             $user = $DB->get_record('user', array('username' => $username));
 
-            echo "Test 1";
+            echo "Test 1\n";
 
             if ($oldstudent) {
 
-                echo "Test 2";
+                echo "Test 2\n";
 
                 if ($oldstudent->getAttribute('StudentUID') != $anneuniv->parentNode->getAttribute('StudentUID')) {
 
-                    echo "Test 3";
+                    echo "Test 3\n";
 
                     if ($DB->record_exists('user_info_field', array('shortname' => 'cohortinfo1'))
                             && $DB->record_exists('user_info_field', array('shortname' => 'cohortinfo2'))) {
@@ -2175,11 +2167,11 @@ if ($fileopeningvet == false) {
 
             $oldstudent = $student;
 
-            echo "Test 4";
+            echo "Test 4\n";
 
             if ($DB->record_exists('user', array('username' => $username))) {
 
-                echo "Test 5";
+                echo "Test 5\n";
 
                 $memberid = $DB->get_record('user', array('username' => $username))->id;
 
@@ -2187,7 +2179,7 @@ if ($fileopeningvet == false) {
 
                 foreach ($anneuniv->childNodes as $inscription) {
 
-                    echo "Test 6";
+                    echo "Test 6\n";
 
                     if ($inscription->nodeType !== 1) {
                         continue;
@@ -2199,7 +2191,7 @@ if ($fileopeningvet == false) {
                     if ($inscription->getAttribute('CodeCycle') == 'c0_bachelor01' ||
                             $inscription->getAttribute('CodeCycle') == 'c0_bachelor02' ) {
 
-                        echo "Test 7";
+                        echo "Test 7\n";
 
                         $cohortcode = $CFG->yearprefix."-".$inscription->getAttribute('CodeEtape');
 
