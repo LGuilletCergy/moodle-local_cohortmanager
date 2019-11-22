@@ -2122,7 +2122,7 @@ if ($fileopeningvet == false) {
     foreach ($anneunivsvet as $anneuniv) {
 
         $student = $anneuniv->parentNode;
-        $username = $student->getAttribute('StudentUIDEisti');
+        $username = 'i-'.$student->getAttribute('StudentUIDEisti');
 
         if ($DB->record_exists('user', array('username' => $username))) {
 
