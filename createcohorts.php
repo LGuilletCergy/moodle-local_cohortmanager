@@ -2194,22 +2194,24 @@ if ($fileopeningvet == false) {
 
                         echo "Test 7\n";
 
-                        $cohortcode = $CFG->yearprefix."-".$inscription->getAttribute('CodeEtape');
+                        $cohortcode = $CFG->yearprefix."-".$inscription->getAttribute('CodeCycle');
 
-                        if ($DB->record_exists('course_categories', array('idnumber' => $cohortcode))) {
+                        $categoryidnumber = $CFG->yearprefix."-5AU";
 
-                            $vetcategory = $DB->get_record('course_categories', array('idnumber' => $cohortcode));
+                        if ($DB->record_exists('course_categories', array('idnumber' => $categoryidnumber))) {
 
-                            $contextidparentincategory = $DB->get_record('context',
-                                    array('instanceid' => $vetcategory->parent,
+                            $vetcategory = $DB->get_record('course_categories', array('idnumber' => $categoryidnumber));
+
+                            $contextidincategory = $DB->get_record('context',
+                                    array('instanceid' => $vetcategory->id,
                                         'contextlevel' => CONTEXT_COURSECAT))->id;
 
                             if (!$DB->record_exists('cohort', array('idnumber' => $cohortcode,
-                                'contextid' => $contextidparentincategory))) {
+                                'contextid' => $contextidincategory))) {
 
                                 $cohort = new stdClass();
-                                $cohort->contextid = $contextidparentincategory;
-                                $cohort->name = substr($inscription->getAttribute('LibEtape'), 9);
+                                $cohort->contextid = $contextidincategory;
+                                $cohort->name = substr($inscription->getAttribute('LibCycle'), 9);
                                 $cohort->idnumber = $cohortcode;
                                 $cohort->component = 'local_cohortmanager';
 
@@ -2221,7 +2223,7 @@ if ($fileopeningvet == false) {
                             } else {
 
                                 $cohortid = $DB->get_record('cohort', array('idnumber' => $cohortcode,
-                                    'contextid' => $contextidparentincategory))->id;
+                                    'contextid' => $contextidincategory))->id;
                             }
 
                             // Ici, rajouter l'entrée dans local_cohortmanager_info.
@@ -2278,7 +2280,7 @@ if ($fileopeningvet == false) {
                         if ($DB->record_exists('user_info_field', array('shortname' => 'cohortinfo1'))
                                 && $DB->record_exists('user_info_field', array('shortname' => 'cohortinfo2'))) {
 
-                            $vetname = $inscription->getAttribute('LibEtape');
+                            $vetname = $inscription->getAttribute('LibCycle');
 
                             $fieldinfo1id = $DB->get_record('user_info_field', array('shortname' => 'cohortinfo1'))->id;
                             $fieldinfo2id = $DB->get_record('user_info_field', array('shortname' => 'cohortinfo2'))->id;
@@ -2392,22 +2394,23 @@ if ($fileopeningvet == false) {
                     if ($inscription->getAttribute('CodeCycle') == 'c0_bachelor01' ||
                             $inscription->getAttribute('CodeCycle') == 'c0_bachelor02' ) {
 
-                        $cohortcode = $CFG->previousyearprefix."-".$inscription->getAttribute('CodeEtape');
+                        $cohortcode = $CFG->previousyearprefix."-".$inscription->getAttribute('CodeCycle');
+                        $categoryidnumber = $CFG->previousyearprefix."-5AU";
 
-                        if ($DB->record_exists('course_categories', array('idnumber' => $cohortcode))) {
+                        if ($DB->record_exists('course_categories', array('idnumber' => $categoryidnumber))) {
 
-                            $vetcategory = $DB->get_record('course_categories', array('idnumber' => $cohortcode));
+                            $vetcategory = $DB->get_record('course_categories', array('idnumber' => $categoryidnumber));
 
-                            $contextidparentincategory = $DB->get_record('context',
-                                    array('instanceid' => $vetcategory->parent,
+                            $contextidincategory = $DB->get_record('context',
+                                    array('instanceid' => $vetcategory->id,
                                         'contextlevel' => CONTEXT_COURSECAT))->id;
 
                             if (!$DB->record_exists('cohort', array('idnumber' => $cohortcode,
-                                'contextid' => $contextidparentincategory))) {
+                                'contextid' => $contextidincategory))) {
 
                                 $cohort = new stdClass();
-                                $cohort->contextid = $contextidparentincategory;
-                                $cohort->name = substr($inscription->getAttribute('LibEtape'), 9);
+                                $cohort->contextid = $contextidincategory;
+                                $cohort->name = substr($inscription->getAttribute('LibCycle'), 9);
                                 $cohort->idnumber = $cohortcode;
                                 $cohort->component = 'local_cohortmanager';
 
@@ -2419,7 +2422,7 @@ if ($fileopeningvet == false) {
                             } else {
 
                                 $cohortid = $DB->get_record('cohort', array('idnumber' => $cohortcode,
-                                    'contextid' => $contextidparentincategory))->id;
+                                    'contextid' => $contextidincategory))->id;
                             }
 
                             // Ici, rajouter l'entrée dans local_cohortmanager_info.
@@ -2476,7 +2479,7 @@ if ($fileopeningvet == false) {
                         if ($DB->record_exists('user_info_field', array('shortname' => 'cohortinfo1'))
                                 && $DB->record_exists('user_info_field', array('shortname' => 'cohortinfo2'))) {
 
-                            $vetname = $inscription->getAttribute('LibEtape');
+                            $vetname = $inscription->getAttribute('LibCycle');
 
                             $fieldinfo1id = $DB->get_record('user_info_field', array('shortname' => 'cohortinfo1'))->id;
                             $fieldinfo2id = $DB->get_record('user_info_field', array('shortname' => 'cohortinfo2'))->id;
